@@ -8,23 +8,14 @@ variables:
 
 .php_template: &php_definition
   variables:
-    MYSQL_PASSWORD: dev
-    MYSQL_USER: dev
-    MYSQL_DATABASE: project
-    MYSQL_ALLOW_EMPTY_PASSWORD: 1
-    MYSQL_HOST: mysql
-    MYSQL_PASS: dev
-    MYSQL_DB: powerdns
     DOCKER_DRIVER: overlay2
 
   services:
-    - name: dockerhub.cwd.at/docker/powerdns:master
+    - name: dockerhub.cwd.at/docker/powerdns:latest
       alias: powerdns
   before_script:
     - export COMPOSER_CACHE_DIR="$(pwd -P)/.composer-cache"
     - export APP_ENV=test
-    - apk add --no-cache mysql-client
-    - echo "CREATE DATABASE IF NOT EXISTS powerdns;GRANT ALL ON powerdns.* TO 'dev'@'%' IDENTIFIED BY 'dev';" | mysql -h mysql -u root
     #- mkdir -p build/api build/coverage build/logs
     - composer install --prefer-dist --ansi --no-progress --no-suggest
   script:
