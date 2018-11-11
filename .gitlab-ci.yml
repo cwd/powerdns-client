@@ -9,13 +9,13 @@ variables:
 .php_template: &php_definition
   variables:
     DOCKER_DRIVER: overlay2
+    APP_ENV: test
 
   services:
     - name: dockerhub.cwd.at/docker/powerdns:0-1
       alias: powerdns
   before_script:
     - export COMPOSER_CACHE_DIR="$(pwd -P)/.composer-cache"
-    - export APP_ENV=test
     #- mkdir -p build/api build/coverage build/logs
     - composer install --prefer-dist --ansi --no-progress --no-suggest
   script:
@@ -53,6 +53,10 @@ test:php7.2:
 
 test:php7.3:
   <<: *php_definition
+  before_script:
+    - export COMPOSER_CACHE_DIR="$(pwd -P)/.composer-cache"
+    #- mkdir -p build/api build/coverage build/logs
+    - composer install --prefer-dist --ansi --no-progress --no-suggest --ignore-platform-reqs
   image: dockerhub.cwd.at/docker/php/cli-xdebug:7.3
   cache:
     policy: pull
