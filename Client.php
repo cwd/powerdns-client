@@ -27,8 +27,9 @@ use GuzzleHttp\Client as GuzzleClient;
 class Client
 {
     private $basePath = 'api/v1';
-    private $serverId = 'localhost';
     private $apiKey;
+
+    private $apiUri;
 
     /** @var HttpClient */
     private $client;
