@@ -18,11 +18,8 @@ variables:
     DOCKER_DRIVER: overlay2
 
   services:
-    - name: mysql
-      alias: mysql
     - name: dockerhub.cwd.at/docker/powerdns:master
       alias: powerdns
-      entrypoint: ["sleep 15 && /entrypoint.sh"]
   before_script:
     - export COMPOSER_CACHE_DIR="$(pwd -P)/.composer-cache"
     - export APP_ENV=test
