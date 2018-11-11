@@ -61,9 +61,9 @@ class Client
      *
      * @return mixed
      */
-    public function call($payload = null, $uri, $hydrationClass = null, $isList = false, $method = 'GET')
+    public function call($payload = null, $uri, $hydrationClass = null, $isList = false, $method = 'GET', array $queryParams = [])
     {
-        $uri = sprintf('%s/%s', $this->apiUri, $uri);
+        $uri = sprintf('%s/%s?%s', $this->apiUri, $uri, http_build_query($queryParams));
         $uri = rtrim($uri, '/');
 
         $request = new Request($method, $uri, [
@@ -75,7 +75,13 @@ class Client
         $responseBody = $response->getBody()->getContents();
         $responseData = json_decode($responseBody);
 
-        if ($response->getStatusCode() >= 300) {
+        //if (getenv('DEBUG')) {
+        //    dump([$uri, $method, isset($responseData->error) ? $responseData->error : [], $response->getStatusCode()]);
+        //}
+
+        if ($response->getStatusCode() >= 300 && isset($responseData->error)) {
+            throw new \LogicException(sprintf('Error on %s request %s: %s', $method, $uri, $responseData->error));
+        } elseif ($response->getStatusCode() >= 300) {
             $message = isset($responseData->message) ?? 'Unknown';
             throw new \Exception(sprintf('Error on request %s: %s', $response->getStatusCode(), $message));
         }
@@ -95,6 +101,8 @@ class Client
             $dataObject = [$dataObject];
         }
 
+        $result = [];
+
         foreach ($dataObject as $data) {
             $result[] = $this->serializer->denormalize($data, $hydrationClass, null, [
                 ObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true,
@@ -106,11 +114,6 @@ class Client
         }
 
         return current($result);
-    }
-
-    protected function getClient(): HttpClient
-    {
-        return $this->client;
     }
 
     /**

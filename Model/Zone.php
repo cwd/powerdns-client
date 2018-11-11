@@ -13,64 +13,86 @@ declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient\Model;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Cwd\PowerDNSClient\Validator\Constraints as DNSAssert;
+
 class Zone
 {
-    /** @var string */
+    const TYPE = 'Zone';
+    const KIND_MASTER = 'Master';
+    const KIND_SLAVE = 'Slave';
+    const KIND_NATIVE = 'Native';
+
+    /** @var string|null */
     private $id;
-    /** @var string */
+    /**
+     * @var string
+     * @Assert\NotBlank()
+     * @DNSAssert\HasDotPostfix()
+     */
     private $name;
-    /** @var string */
-    private $type;
-    /** @var string */
+    /**
+     * @var string
+     * @Assert\NotBlank()
+     * @Assert\Choice(
+     *    choices= {"Zone"}
+     * )
+     */
+    private $type = self::TYPE;
+
+    /** @var string|null */
     private $url;
-    /** @var string */
+    /**
+     * @var string|null
+     * @Assert\Choice(
+     *   choices = {"Master", "Slave", "Native"}
+     * )
+     */
     private $kind;
     /** @var RRSet[] */
     private $rrsets = [];
-    /** @var int */
+    /** @var int|null */
     private $serial;
-    /** @var int */
+    /** @var int|null */
     private $notifiedSerial;
     /** @var string[] */
     private $masters = [];
     /** @var bool */
     private $dnssec = false;
-    /** @var string */
+    /** @var string|null */
     private $nsec3param;
     /** @var bool */
     private $nsec3narrow = false;
     /** @var bool */
     private $predisgned = false;
-    /** @var string */
+    /** @var string|null */
     private $soaEdit;
-    /** @var string */
+    /** @var string|null */
     private $soaEditApi;
     /** @var bool */
     private $apiRectify = false;
-    /** @var string */
+    /** @var string|null */
     private $zone;
-    /** @var string */
+    /** @var string|null */
     private $account;
     /** @var string[] */
     private $nameservers = [];
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->id;
     }
 
     /**
-     * @param string $id
-     *
+     * @param null|string $id
      * @return Zone
      */
-    public function setId(string $id): Zone
+    public function setId(?string $id): Zone
     {
         $this->id = $id;
-
         return $this;
     }
 
@@ -84,13 +106,11 @@ class Zone
 
     /**
      * @param string $name
-     *
      * @return Zone
      */
     public function setName(string $name): Zone
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -104,53 +124,47 @@ class Zone
 
     /**
      * @param string $type
-     *
      * @return Zone
      */
     public function setType(string $type): Zone
     {
         $this->type = $type;
-
         return $this;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getUrl(): string
+    public function getUrl(): ?string
     {
         return $this->url;
     }
 
     /**
-     * @param string $url
-     *
+     * @param null|string $url
      * @return Zone
      */
-    public function setUrl(string $url): Zone
+    public function setUrl(?string $url): Zone
     {
         $this->url = $url;
-
         return $this;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getKind(): string
+    public function getKind(): ?string
     {
         return $this->kind;
     }
 
     /**
-     * @param string $kind
-     *
+     * @param null|string $kind
      * @return Zone
      */
-    public function setKind(string $kind): Zone
+    public function setKind(?string $kind): Zone
     {
         $this->kind = $kind;
-
         return $this;
     }
 
@@ -164,53 +178,47 @@ class Zone
 
     /**
      * @param RRSet[] $rrsets
-     *
      * @return Zone
      */
     public function setRrsets(array $rrsets): Zone
     {
         $this->rrsets = $rrsets;
-
         return $this;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getSerial(): int
+    public function getSerial(): ?int
     {
         return $this->serial;
     }
 
     /**
-     * @param int $serial
-     *
+     * @param int|null $serial
      * @return Zone
      */
-    public function setSerial(int $serial): Zone
+    public function setSerial(?int $serial): Zone
     {
         $this->serial = $serial;
-
         return $this;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getNotifiedSerial(): int
+    public function getNotifiedSerial(): ?int
     {
         return $this->notifiedSerial;
     }
 
     /**
-     * @param int $notifiedSerial
-     *
+     * @param int|null $notifiedSerial
      * @return Zone
      */
-    public function setNotifiedSerial(int $notifiedSerial): Zone
+    public function setNotifiedSerial(?int $notifiedSerial): Zone
     {
         $this->notifiedSerial = $notifiedSerial;
-
         return $this;
     }
 
@@ -224,13 +232,11 @@ class Zone
 
     /**
      * @param string[] $masters
-     *
      * @return Zone
      */
     public function setMasters(array $masters): Zone
     {
         $this->masters = $masters;
-
         return $this;
     }
 
@@ -244,33 +250,29 @@ class Zone
 
     /**
      * @param bool $dnssec
-     *
      * @return Zone
      */
     public function setDnssec(bool $dnssec): Zone
     {
         $this->dnssec = $dnssec;
-
         return $this;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getNsec3param(): string
+    public function getNsec3param(): ?string
     {
         return $this->nsec3param;
     }
 
     /**
-     * @param string $nsec3param
-     *
+     * @param null|string $nsec3param
      * @return Zone
      */
-    public function setNsec3param(string $nsec3param): Zone
+    public function setNsec3param(?string $nsec3param): Zone
     {
         $this->nsec3param = $nsec3param;
-
         return $this;
     }
 
@@ -284,13 +286,11 @@ class Zone
 
     /**
      * @param bool $nsec3narrow
-     *
      * @return Zone
      */
     public function setNsec3narrow(bool $nsec3narrow): Zone
     {
         $this->nsec3narrow = $nsec3narrow;
-
         return $this;
     }
 
@@ -304,53 +304,47 @@ class Zone
 
     /**
      * @param bool $predisgned
-     *
      * @return Zone
      */
     public function setPredisgned(bool $predisgned): Zone
     {
         $this->predisgned = $predisgned;
-
         return $this;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getSoaEdit(): string
+    public function getSoaEdit(): ?string
     {
         return $this->soaEdit;
     }
 
     /**
-     * @param string $soaEdit
-     *
+     * @param null|string $soaEdit
      * @return Zone
      */
-    public function setSoaEdit(string $soaEdit): Zone
+    public function setSoaEdit(?string $soaEdit): Zone
     {
         $this->soaEdit = $soaEdit;
-
         return $this;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getSoaEditApi(): string
+    public function getSoaEditApi(): ?string
     {
         return $this->soaEditApi;
     }
 
     /**
-     * @param string $soaEditApi
-     *
+     * @param null|string $soaEditApi
      * @return Zone
      */
-    public function setSoaEditApi(string $soaEditApi): Zone
+    public function setSoaEditApi(?string $soaEditApi): Zone
     {
         $this->soaEditApi = $soaEditApi;
-
         return $this;
     }
 
@@ -364,53 +358,47 @@ class Zone
 
     /**
      * @param bool $apiRectify
-     *
      * @return Zone
      */
     public function setApiRectify(bool $apiRectify): Zone
     {
         $this->apiRectify = $apiRectify;
-
         return $this;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getZone(): string
+    public function getZone(): ?string
     {
         return $this->zone;
     }
 
     /**
-     * @param string $zone
-     *
+     * @param null|string $zone
      * @return Zone
      */
-    public function setZone(string $zone): Zone
+    public function setZone(?string $zone): Zone
     {
         $this->zone = $zone;
-
         return $this;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getAccount(): string
+    public function getAccount(): ?string
     {
         return $this->account;
     }
 
     /**
-     * @param string $account
-     *
+     * @param null|string $account
      * @return Zone
      */
-    public function setAccount(string $account): Zone
+    public function setAccount(?string $account): Zone
     {
         $this->account = $account;
-
         return $this;
     }
 
@@ -424,13 +412,11 @@ class Zone
 
     /**
      * @param string[] $nameservers
-     *
      * @return Zone
      */
     public function setNameservers(array $nameservers): Zone
     {
         $this->nameservers = $nameservers;
-
         return $this;
     }
 }

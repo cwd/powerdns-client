@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Cwd\PowerDNSClient;
 
 use Cwd\PowerDNSClient\Endpoints\ServersEndpoint;
+use Cwd\PowerDNSClient\Endpoints\ZonesEndpoint;
 
 class PowerDNSClient
 {
@@ -23,16 +24,15 @@ class PowerDNSClient
     /** @var ServersEndpoint */
     private $serversEndpoint;
 
+    /** @var ZonesEndpoint */
+    private $zonesEndpoint;
+
     /** @var string */
     private $defaultServerId = 'localhost';
 
-    public function __construct(?Client $client = null)
+    public function __construct(Client $client)
     {
-        if (null === $client) {
-            $this->client = new Client('http://localhost', 'changeme');
-        } else {
-            $this->client = $client;
-        }
+        $this->client = $client;
     }
 
     public function servers(): ServersEndpoint
@@ -42,6 +42,15 @@ class PowerDNSClient
         }
 
         return $this->serversEndpoint;
+    }
+
+    public function zones(): ZonesEndpoint
+    {
+        if (null === $this->zonesEndpoint) {
+            $this->zonesEndpoint = new ZonesEndpoint($this->getClient(), $this->getDefaultServerId());
+        }
+
+        return $this->zonesEndpoint;
     }
 
     /**
