@@ -24,7 +24,7 @@ services:
             XDEBUG_CONFIG: remote_host=172.17.0.1 remote_port=9000 remote_connect_back=0
 
     powerdns:
-        image: dockerhub.cwd.at/docker/powerdns:master
+        image: dockerhub.cwd.at/docker/powerdns:0.3
         environment:
             MYSQL_HOST: mysql
             MYSQL_USER: dev

@@ -12,7 +12,7 @@ variables:
     APP_ENV: test
 
   services:
-    - name: dockerhub.cwd.at/docker/powerdns:0-1
+    - name: dockerhub.cwd.at/docker/powerdns:0.3
       alias: powerdns
   before_script:
     - export COMPOSER_CACHE_DIR="$(pwd -P)/.composer-cache"
