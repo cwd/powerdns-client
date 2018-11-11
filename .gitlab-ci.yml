@@ -11,7 +11,7 @@ variables:
     DOCKER_DRIVER: overlay2
 
   services:
-    - name: dockerhub.cwd.at/docker/powerdns:latest
+    - name: dockerhub.cwd.at/docker/powerdns:0.1
       alias: powerdns
   before_script:
     - export COMPOSER_CACHE_DIR="$(pwd -P)/.composer-cache"
