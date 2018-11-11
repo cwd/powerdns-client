@@ -33,14 +33,14 @@ variables:
 test:php7.1:
   <<: *php_definition
   image: dockerhub.cwd.at/docker/php/cli-xdebug:7.1
-    artifacts:
-      name: coverage
-      paths:
-        - build/coverage
-      when: on_success
-      expire_in: 2 days
-      reports:
-        junit: build/logs/phpunit.xml
+  artifacts:
+    name: coverage
+    paths:
+      - build/coverage
+    when: on_success
+    expire_in: 2 days
+    reports:
+      junit: build/logs/phpunit.xml
   tags:
     - autoscale
 
