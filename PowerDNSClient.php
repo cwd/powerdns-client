@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of powerdns client.
+ * This file is part of the CwdPowerDNS Client
  *
  * (c) 2018 cwd.at GmbH <office@cwd.at>
  *
@@ -22,7 +23,7 @@ class PowerDNSClient
     /** @var ServersEndpoint */
     private $serversEndpoint;
 
-    /** @var string  */
+    /** @var string */
     private $defaultServerId = 'localhost';
 
     public function __construct(?Client $client = null)

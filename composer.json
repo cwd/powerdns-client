@@ -1,0 +1,38 @@
+{
+  "name": "cwd/powerdns-client",
+  "description": "",
+  "keywords": ["powerns", "api-client", "client", "dns", "bundle"],
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ludwig Ruderstaller",
+      "email": "l.ruderstaller@cwd.at",
+      "homepage": "https://cwd.at"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "ext-json": "*",
+    "php-http/guzzle6-adapter": "^1.1",
+    "php-http/discovery": "^1.0",
+    "symfony/serializer-pack": "~1.0",
+    "symfony/http-foundation": "~3.4 || ~4.0",
+    "webmozart/assert": "~1.3"
+  },
+  "suggest": {
+    "symfony/symfony": "For using bundle integration"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.13",
+    "phpunit/phpunit": "~7.4"
+  },
+  "autoload-dev": {
+    "Cwd\\PowerDNSClient\\Tests": "tests/"
+  },
+  "autoload": {
+    "psr-4": {
+      "Cwd\\PowerDNSClient\\": ""
+    }
+  }
+}

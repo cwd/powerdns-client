@@ -1,0 +1,66 @@
+stages:
+- test
+
+variables:
+  COMPOSER_ALLOW_SUPERUSER: "1"
+  COMPOSER_DISABLE_XDEBUG_WARN: "1"
+
+
+.php_template: &php_definition
+  variables:
+    MYSQL_PASSWORD: dev
+    MYSQL_USER: dev
+    MYSQL_DATABASE: project
+    MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    MYSQL_HOST: mysql
+    MYSQL_PASS: dev
+    MYSQL_DB: powerdns
+  services:
+    - mysql
+    - dockerhub.cwd.at/docker/powerdns:master
+  before_script:
+    - export COMPOSER_CACHE_DIR="$(pwd -P)/.composer-cache"
+    - export APP_ENV=test
+    - apk add --no-cache mysql-client
+    - echo "CREATE DATABASE IF NOT EXISTS powerdns;GRANT ALL ON powerdns.* TO 'dev'@'%' IDENTIFIED BY 'dev';" | mysql -h mysql -u root
+    #- mkdir -p build/api build/coverage build/logs
+    - composer install --prefer-dist --ansi --no-progress --no-suggest
+  script:
+    #- vendor/bin/php-cs-fixer fix --dry-run --config=.php_cs
+    #    - php -d zend.enable_gc=0 bin/phpunit -c ./phpunit.xml.dist --coverage-html=build/coverage --coverage-xml=build/logs/coverage --log-junit=build/logs/phpunit.xml --coverage-text --colors=never
+    #- bin/behat --format=progress --verbose --stop-on-failure
+  stage: test
+  cache:
+    key: "${CI_PROJECT_PATH_SLUG}-cache"
+    paths:
+    - .composer-cache
+    policy: pull-push
+
+test:php7.1:
+  <<: *php_definition
+  image: dockerhub.cwd.at/docker/php/cli-xdebug:7.1
+  #  artifacts:
+  #  name: coverage
+  #  paths:
+  #    - build/coverage
+  #    - build/logs
+  #  when: on_success
+  #  expire_in: 2 days
+  tags:
+    - autoscale
+
+test:php7.2:
+  <<: *php_definition
+  image: dockerhub.cwd.at/docker/php/cli-xdebug:7.2
+  cache:
+    policy: pull
+  tags:
+    - autoscale
+
+test:php7.3:
+  <<: *php_definition
+  image: dockerhub.cwd.at/docker/php/cli-xdebug:7.3
+  cache:
+    policy: pull
+  tags:
+    - autoscale

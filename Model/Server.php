@@ -1,8 +1,17 @@
 <?php
 
+/*
+ * This file is part of the CwdPowerDNS Client
+ *
+ * (c) 2018 cwd.at GmbH <office@cwd.at>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient\Model;
-
 
 class Server
 {
@@ -31,11 +40,13 @@ class Server
 
     /**
      * @param string $type
+     *
      * @return Server
      */
     public function setType(string $type): Server
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -49,11 +60,13 @@ class Server
 
     /**
      * @param string $id
+     *
      * @return Server
      */
     public function setId(string $id): Server
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -67,11 +80,13 @@ class Server
 
     /**
      * @param string $daemonType
+     *
      * @return Server
      */
     public function setDaemonType(string $daemonType): Server
     {
         $this->daemonType = $daemonType;
+
         return $this;
     }
 
@@ -85,11 +100,13 @@ class Server
 
     /**
      * @param string $version
+     *
      * @return Server
      */
     public function setVersion(string $version): Server
     {
         $this->version = $version;
+
         return $this;
     }
 
@@ -103,11 +120,13 @@ class Server
 
     /**
      * @param string $url
+     *
      * @return Server
      */
     public function setUrl(string $url): Server
     {
         $this->url = $url;
+
         return $this;
     }
 
@@ -121,11 +140,13 @@ class Server
 
     /**
      * @param string $configUrl
+     *
      * @return Server
      */
     public function setConfigUrl(string $configUrl): Server
     {
         $this->configUrl = $configUrl;
+
         return $this;
     }
 
@@ -139,11 +160,13 @@ class Server
 
     /**
      * @param string $zonesUrl
+     *
      * @return Server
      */
     public function setZonesUrl(string $zonesUrl): Server
     {
         $this->zonesUrl = $zonesUrl;
+
         return $this;
     }
 }

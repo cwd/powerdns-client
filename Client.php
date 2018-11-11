@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of powerdns client.
+ * This file is part of the CwdPowerDNS Client
  *
  * (c) 2018 cwd.at GmbH <office@cwd.at>
  *
@@ -66,9 +66,6 @@ class Client
         $uri = sprintf('%s/%s', $this->apiUri, $uri);
         $uri = rtrim($uri, '/');
 
-        dump($uri);
-
-
         $request = new Request($method, $uri, [
             'X-API-Key' => $this->apiKey,
             'Content-Type' => 'application/json',
@@ -77,8 +74,6 @@ class Client
         $response = $this->client->sendRequest($request);
         $responseBody = $response->getBody()->getContents();
         $responseData = json_decode($responseBody);
-
-        dump($responseData);
 
         if ($response->getStatusCode() >= 300) {
             $message = isset($responseData->message) ?? 'Unknown';
@@ -93,7 +88,6 @@ class Client
 
         return $responseData;
     }
-
 
     public function denormalizeObject($hydrationClass, $dataObject, $isList = false)
     {

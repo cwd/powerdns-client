@@ -1,8 +1,17 @@
 <?php
 
+/*
+ * This file is part of the CwdPowerDNS Client
+ *
+ * (c) 2018 cwd.at GmbH <office@cwd.at>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient\Model;
-
 
 class Cryptokey
 {
@@ -12,7 +21,7 @@ class Cryptokey
     private $id;
     /** @var string */
     private $keytype;
-    /** @var bool  */
+    /** @var bool */
     private $active = false;
     /** @var string */
     private $dnskey;
@@ -22,7 +31,7 @@ class Cryptokey
     private $privatekey;
     /** @var string */
     private $algorithm;
-    /** @var integer */
+    /** @var int */
     private $bits;
 
     /**
@@ -35,11 +44,13 @@ class Cryptokey
 
     /**
      * @param string $type
+     *
      * @return Cryptokey
      */
     public function setType(string $type): Cryptokey
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -53,11 +64,13 @@ class Cryptokey
 
     /**
      * @param string $id
+     *
      * @return Cryptokey
      */
     public function setId(string $id): Cryptokey
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -71,11 +84,13 @@ class Cryptokey
 
     /**
      * @param string $keytype
+     *
      * @return Cryptokey
      */
     public function setKeytype(string $keytype): Cryptokey
     {
         $this->keytype = $keytype;
+
         return $this;
     }
 
@@ -89,11 +104,13 @@ class Cryptokey
 
     /**
      * @param bool $active
+     *
      * @return Cryptokey
      */
     public function setActive(bool $active): Cryptokey
     {
         $this->active = $active;
+
         return $this;
     }
 
@@ -107,11 +124,13 @@ class Cryptokey
 
     /**
      * @param string $dnskey
+     *
      * @return Cryptokey
      */
     public function setDnskey(string $dnskey): Cryptokey
     {
         $this->dnskey = $dnskey;
+
         return $this;
     }
 
@@ -125,11 +144,13 @@ class Cryptokey
 
     /**
      * @param string[] $ds
+     *
      * @return Cryptokey
      */
     public function setDs(array $ds): Cryptokey
     {
         $this->ds = $ds;
+
         return $this;
     }
 
@@ -143,11 +164,13 @@ class Cryptokey
 
     /**
      * @param string $privatekey
+     *
      * @return Cryptokey
      */
     public function setPrivatekey(string $privatekey): Cryptokey
     {
         $this->privatekey = $privatekey;
+
         return $this;
     }
 
@@ -161,11 +184,13 @@ class Cryptokey
 
     /**
      * @param string $algorithm
+     *
      * @return Cryptokey
      */
     public function setAlgorithm(string $algorithm): Cryptokey
     {
         $this->algorithm = $algorithm;
+
         return $this;
     }
 
@@ -179,11 +204,13 @@ class Cryptokey
 
     /**
      * @param int $bits
+     *
      * @return Cryptokey
      */
     public function setBits(int $bits): Cryptokey
     {
         $this->bits = $bits;
+
         return $this;
     }
 }

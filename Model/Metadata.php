@@ -1,8 +1,17 @@
 <?php
 
+/*
+ * This file is part of the CwdPowerDNS Client
+ *
+ * (c) 2018 cwd.at GmbH <office@cwd.at>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient\Model;
-
 
 class Metadata
 {
@@ -21,11 +30,13 @@ class Metadata
 
     /**
      * @param string $kind
+     *
      * @return Metadata
      */
     public function setKind(string $kind): Metadata
     {
         $this->kind = $kind;
+
         return $this;
     }
 
@@ -39,11 +50,13 @@ class Metadata
 
     /**
      * @param string[] $metadata
+     *
      * @return Metadata
      */
     public function setMetadata(array $metadata): Metadata
     {
         $this->metadata = $metadata;
+
         return $this;
     }
 }

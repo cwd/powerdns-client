@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of datamolino client.
+ * This file is part of the CwdPowerDNS Client
  *
  * (c) 2018 cwd.at GmbH <office@cwd.at>
  *
@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient\Endpoints;
 
-
 use Cwd\PowerDNSClient\Model\Server;
 
 class ServersEndpoint extends AbstractEndpoint
@@ -22,7 +21,7 @@ class ServersEndpoint extends AbstractEndpoint
 
     public function get(?string $serverId = null): Server
     {
-        if ($serverId === null) {
+        if (null === $serverId) {
             $serverId = $this->defaultServerId;
         }
 
@@ -31,6 +30,7 @@ class ServersEndpoint extends AbstractEndpoint
 
     /**
      * @return Servers[]
+     *
      * @throws \Http\Client\Exception
      */
     public function all(): array
@@ -46,6 +46,6 @@ class ServersEndpoint extends AbstractEndpoint
     public function statistics(): array
     {
         // Result is different - denormalize by hand
-        return $this->getClient()->call(null, sprintf( self::ENDPOINT, $this->defaultServerId).'/statistics', null, false, 'GET');
+        return $this->getClient()->call(null, sprintf(self::ENDPOINT, $this->defaultServerId).'/statistics', null, false, 'GET');
     }
 }

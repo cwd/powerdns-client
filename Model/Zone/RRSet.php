@@ -1,8 +1,17 @@
 <?php
 
+/*
+ * This file is part of the CwdPowerDNS Client
+ *
+ * (c) 2018 cwd.at GmbH <office@cwd.at>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient\Model\Zone;
-
 
 class RRSet
 {
@@ -10,7 +19,7 @@ class RRSet
     private $name;
     /** @var string */
     private $type;
-    /** @var integer */
+    /** @var int */
     private $ttl;
     /** @var string */
     private $changetype;
@@ -29,11 +38,13 @@ class RRSet
 
     /**
      * @param string $name
+     *
      * @return RRSet
      */
     public function setName(string $name): RRSet
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -47,11 +58,13 @@ class RRSet
 
     /**
      * @param string $type
+     *
      * @return RRSet
      */
     public function setType(string $type): RRSet
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -65,11 +78,13 @@ class RRSet
 
     /**
      * @param int $ttl
+     *
      * @return RRSet
      */
     public function setTtl(int $ttl): RRSet
     {
         $this->ttl = $ttl;
+
         return $this;
     }
 
@@ -83,11 +98,13 @@ class RRSet
 
     /**
      * @param string $changetype
+     *
      * @return RRSet
      */
     public function setChangetype(string $changetype): RRSet
     {
         $this->changetype = $changetype;
+
         return $this;
     }
 
@@ -101,11 +118,13 @@ class RRSet
 
     /**
      * @param Record[] $records
+     *
      * @return RRSet
      */
     public function setRecords(array $records): RRSet
     {
         $this->records = $records;
+
         return $this;
     }
 
@@ -119,11 +138,13 @@ class RRSet
 
     /**
      * @param Comment[] $comments
+     *
      * @return RRSet
      */
     public function setComments(array $comments): RRSet
     {
         $this->comments = $comments;
+
         return $this;
     }
 }

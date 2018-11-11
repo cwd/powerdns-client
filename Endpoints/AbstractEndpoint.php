@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of datamolino client.
+ * This file is part of the CwdPowerDNS Client
  *
  * (c) 2018 cwd.at GmbH <office@cwd.at>
  *

@@ -1,14 +1,23 @@
 <?php
 
+/*
+ * This file is part of the CwdPowerDNS Client
+ *
+ * (c) 2018 cwd.at GmbH <office@cwd.at>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient\Model;
-
 
 class SearchResult
 {
     /** @var string */
     private $content;
-    /** @var bool  */
+    /** @var bool */
     private $disabled = false;
     /** @var string */
     private $name;
@@ -20,7 +29,7 @@ class SearchResult
     private $zone;
     /** @var string */
     private $type;
-    /** @var integer */
+    /** @var int */
     private $ttl;
 
     /**
@@ -33,11 +42,13 @@ class SearchResult
 
     /**
      * @param string $content
+     *
      * @return SearchResult
      */
     public function setContent(string $content): SearchResult
     {
         $this->content = $content;
+
         return $this;
     }
 
@@ -51,11 +62,13 @@ class SearchResult
 
     /**
      * @param bool $disabled
+     *
      * @return SearchResult
      */
     public function setDisabled(bool $disabled): SearchResult
     {
         $this->disabled = $disabled;
+
         return $this;
     }
 
@@ -69,11 +82,13 @@ class SearchResult
 
     /**
      * @param string $name
+     *
      * @return SearchResult
      */
     public function setName(string $name): SearchResult
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -87,11 +102,13 @@ class SearchResult
 
     /**
      * @param string $objectType
+     *
      * @return SearchResult
      */
     public function setObjectType(string $objectType): SearchResult
     {
         $this->objectType = $objectType;
+
         return $this;
     }
 
@@ -105,11 +122,13 @@ class SearchResult
 
     /**
      * @param string $zoneId
+     *
      * @return SearchResult
      */
     public function setZoneId(string $zoneId): SearchResult
     {
         $this->zoneId = $zoneId;
+
         return $this;
     }
 
@@ -123,11 +142,13 @@ class SearchResult
 
     /**
      * @param string $zone
+     *
      * @return SearchResult
      */
     public function setZone(string $zone): SearchResult
     {
         $this->zone = $zone;
+
         return $this;
     }
 
@@ -141,11 +162,13 @@ class SearchResult
 
     /**
      * @param string $type
+     *
      * @return SearchResult
      */
     public function setType(string $type): SearchResult
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -159,11 +182,13 @@ class SearchResult
 
     /**
      * @param int $ttl
+     *
      * @return SearchResult
      */
     public function setTtl(int $ttl): SearchResult
     {
         $this->ttl = $ttl;
+
         return $this;
     }
 }
