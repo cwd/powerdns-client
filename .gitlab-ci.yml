@@ -29,6 +29,7 @@ variables:
     #- vendor/bin/php-cs-fixer fix --dry-run --config=.php_cs
     #    - php -d zend.enable_gc=0 bin/phpunit -c ./phpunit.xml.dist --coverage-html=build/coverage --coverage-xml=build/logs/coverage --log-junit=build/logs/phpunit.xml --coverage-text --colors=never
     #- bin/behat --format=progress --verbose --stop-on-failure
+    - vendor/bin/phpunit
   stage: test
   cache:
     key: "${CI_PROJECT_PATH_SLUG}-cache"
