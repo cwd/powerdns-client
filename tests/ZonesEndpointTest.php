@@ -20,7 +20,7 @@ use Webmozart\Assert\Assert;
 class ZonesEndpointTest extends AbstractTest
 {
     /**
-     * This makes sure with have a clean startingpoint
+     * This makes sure with have a clean startingpoint.
      */
     public function testCleanup()
     {
@@ -54,7 +54,7 @@ class ZonesEndpointTest extends AbstractTest
         try {
             $this->getClient()->zones()->create($zone, true);
             $this->fail('No validation exception was thrown');
-        }catch (ValidationException $e) {
+        } catch (ValidationException $e) {
             foreach ($e->getViolations() as $violation) {
                 $this->assertTrue(!empty($violation->getMessage()));
             }
@@ -93,6 +93,7 @@ class ZonesEndpointTest extends AbstractTest
 
         $zone = $this->getClient()->zones()->create($zone, true);
         $this->assertNotEmpty($zone->getId());
+
         return $zone;
     }
 
@@ -131,7 +132,6 @@ class ZonesEndpointTest extends AbstractTest
         $this->getClient()->zones()->get($zone, 'NotExisting');
     }
 
-
     /**
      * @depends testCreate
      */
@@ -152,7 +152,6 @@ class ZonesEndpointTest extends AbstractTest
 
         $this->assertInstanceOf(Zone::class, $newZone);
         $this->assertEquals($zone, $newZone);
-
     }
 
     /**
@@ -195,7 +194,6 @@ class ZonesEndpointTest extends AbstractTest
         Assert::allIsInstanceOf($zones, Zone::class);
     }
 
-
     /**
      * @depends testCreateSlave
      */
@@ -208,7 +206,6 @@ class ZonesEndpointTest extends AbstractTest
         $this->expectException(\Exception::class);
         $this->getClient()->zones()->get($zone->getId());
     }
-
 
     /**
      * @depends testCreate

@@ -22,7 +22,7 @@ variables:
     #- vendor/bin/php-cs-fixer fix --dry-run --config=.php_cs
     #    - php -d zend.enable_gc=0 bin/phpunit -c ./phpunit.xml.dist --coverage-html=build/coverage --coverage-xml=build/logs/coverage --log-junit=build/logs/phpunit.xml --coverage-text --colors=never
     #- bin/behat --format=progress --verbose --stop-on-failure
-    - vendor/bin/phpunit
+    - vendor/bin/phpunit --coverage-html build/coverage
   stage: test
   cache:
     key: "${CI_PROJECT_PATH_SLUG}-cache"
@@ -33,13 +33,13 @@ variables:
 test:php7.1:
   <<: *php_definition
   image: dockerhub.cwd.at/docker/php/cli-xdebug:7.1
-  #  artifacts:
-  #  name: coverage
-  #  paths:
-  #    - build/coverage
+    artifacts:
+    name: coverage
+    paths:
+      - build/coverage
   #    - build/logs
-  #  when: on_success
-  #  expire_in: 2 days
+    when: on_success
+    expire_in: 2 days
   tags:
     - autoscale
 

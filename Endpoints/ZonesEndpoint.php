@@ -25,15 +25,14 @@ class ZonesEndpoint extends AbstractEndpoint
      */
     public function delete($zoneId)
     {
-        if ($zoneId instanceOf Zone) {
+        if ($zoneId instanceof Zone) {
             $zoneId = $zoneId->getId();
         }
 
         $this->getClient()->call(null, sprintf(self::ENDPOINT_ELEMENT, $this->defaultServerId, $zoneId), null, false, 'DELETE');
     }
 
-
-    public function create(Zone $zone, $rrsets = true, $hydrationClass = Zone::Class): Zone
+    public function create(Zone $zone, $rrsets = true, $hydrationClass = Zone::class): Zone
     {
         $rrsets = ($rrsets) ? 'true' : 'false';
 
@@ -46,12 +45,14 @@ class ZonesEndpoint extends AbstractEndpoint
 
     /**
      * @param string|Zone $zoneId
+     *
      * @return Zone
+     *
      * @throws \Http\Client\Exception
      */
-    public function get($zoneId, $hydrationClass = Zone::Class): Zone
+    public function get($zoneId, $hydrationClass = Zone::class): Zone
     {
-        if ($zoneId instanceOf Zone) {
+        if ($zoneId instanceof Zone) {
             $zoneId = $zoneId->getId();
         }
 
@@ -63,14 +64,13 @@ class ZonesEndpoint extends AbstractEndpoint
      *
      * @throws \Http\Client\Exception
      */
-    public function all($zoneName = null, $hydrationClass = Zone::Class): array
+    public function all($zoneName = null, $hydrationClass = Zone::class): array
     {
         $queryParams = [];
-        if ($zoneName !== null) {
+        if (null !== $zoneName) {
             $queryParams['zone'] = $zoneName;
         }
 
         return $this->getClient()->call(null, sprintf(self::ENDPOINT_LIST, $this->defaultServerId), $hydrationClass, true, 'GET', $queryParams);
     }
-
 }
