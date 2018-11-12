@@ -84,11 +84,57 @@ class ZonesEndpointTest extends AbstractTest
         return $this->getClient()->zones()->create($zone, true);
     }
 
+    public function testWrongRRSetType()
+    {
+        $zone = (new Zone())
+            ->setName('example.com.')
+            ->setKind(Zone::KIND_MASTER)
+            ->addRrset(
+                (new Zone\RRSet())->setName('www.example.com.')
+                    ->setType('WRONG')
+                    ->setTtl(3600)
+                    ->addRecord(
+                        (new Zone\Record())->setContent('127.0.0.1')
+                            ->setDisabled(false)
+                    )
+                    ->addComment(
+                        (new Zone\Comment())->setContent('Test Test')
+                            ->setAccount('Max Mustermann')
+                    )
+            )
+        ;
+
+        $this->expectException(ValidationException::class);
+        $this->getClient()->zones()->create($zone, true);
+    }
+
     public function testCreate()
     {
         $zone = (new Zone())
             ->setName('example.com.')
             ->setKind(Zone::KIND_MASTER)
+            ->addRrset(
+                (new Zone\RRSet())->setName('www.example.com.')
+                                  ->setType('A')
+                                  ->setTtl(3600)
+                                  ->addRecord(
+                                      (new Zone\Record())->setContent('127.0.0.1')
+                                                         ->setDisabled(false)
+                                  )
+                                  ->addComment(
+                                      (new Zone\Comment())->setContent('Test Test')
+                                          ->setAccount('Max Mustermann')
+                                  )
+            )
+            ->addRrset((new Zone\RRSet())->setName('delete.example.com.')
+                ->setType('A')
+                ->setTtl(3600)
+                ->addRecord(
+                    (new Zone\Record())->setContent('127.0.0.1')
+                        ->setDisabled(false)
+                )
+                ->addComment((new Zone\Comment())->setContent('test')->setAccount('Maxi'))
+            )
         ;
 
         $zone = $this->getClient()->zones()->create($zone, true);
@@ -102,34 +148,13 @@ class ZonesEndpointTest extends AbstractTest
         $zone = (new Zone())
             ->setName('example-slave.com.')
             ->setKind(Zone::KIND_SLAVE)
+            ->setMasters(['127.0.0.2'])
         ;
 
         $zone = $this->getClient()->zones()->create($zone, true);
         $this->assertNotEmpty($zone->getId());
 
         return $zone;
-    }
-
-    public function testCreateExisting()
-    {
-        $this->expectException(\LogicException::class);
-
-        $zone = (new Zone())
-            ->setName('example.com.')
-            ->setKind(Zone::KIND_MASTER)
-        ;
-
-        $this->getClient()->zones()->create($zone, true);
-    }
-
-    /**
-     * @depends testCreate
-     */
-    public function testMissingHydrationClass(Zone $zone)
-    {
-        $this->expectException(\Exception::class);
-
-        $this->getClient()->zones()->get($zone, 'NotExisting');
     }
 
     /**
@@ -152,6 +177,219 @@ class ZonesEndpointTest extends AbstractTest
 
         $this->assertInstanceOf(Zone::class, $newZone);
         $this->assertEquals($zone, $newZone);
+    }
+
+    /**
+     * @param Zone $zone
+     * @depends testCreate
+     */
+    public function testUpdateWithLazyLoad(Zone $zone)
+    {
+        $this->assertEmpty($zone->getAccount());
+        $zone->setAccount('Max Mustermann');
+
+        // Add new RRSet
+        $zone->addRrset((new Zone\RRSet())->setChangetype(Zone\RRSet::TYPE_CREATE)
+            ->setName('www3.example.com.')
+            ->setType('A')
+            ->setTtl(3600)
+            ->addRecord((new Zone\Record())->setContent('127.0.0.3'))
+        );
+
+        $lazyLoadZone = $this->getClient()->zones()->update($zone, true);
+
+        $zone = $this->getClient()->zones()->get($zone->getId());
+        $this->assertEquals('Max Mustermann', $zone->getAccount());
+        $this->assertEquals($zone, $lazyLoadZone);
+
+        $found = false;
+        foreach ($zone->getRrsets() as $recordset) {
+            if ($recordset->getName('www3.example.com.')) {
+                $found = true;
+            }
+        }
+
+        if (!$found) {
+            $this->fail('www3.example.com. not found');
+        }
+    }
+
+    /**
+     * @param Zone $zone
+     * @depends testCreate
+     */
+    public function testUpdate(Zone $zone)
+    {
+        $zone->setAccount('Max Mustermann');
+
+        // Add new RRSet
+        $zone->addRrset((new Zone\RRSet())->setChangetype(Zone\RRSet::TYPE_CREATE)
+            ->setName('www3.example.com.')
+            ->setType('A')
+            ->setTtl(3600)
+            ->addRecord((new Zone\Record())->setContent('127.0.0.3'))
+        );
+
+        $this->getClient()->zones()->update($zone, false);
+
+        $zone = $this->getClient()->zones()->get($zone->getId());
+        $this->assertEquals('Max Mustermann', $zone->getAccount());
+
+        $found = false;
+        foreach ($zone->getRrsets() as $recordset) {
+            if ($recordset->getName('www3.example.com.')) {
+                $found = true;
+            }
+        }
+
+        if (!$found) {
+            $this->fail('www3.example.com. not found');
+        }
+    }
+
+    /**
+     * @param Zone $zone
+     * @depends testCreate
+     */
+    public function testUpdateRRSetsWithLazyLoad(Zone $zone)
+    {
+        /** @var Zone\RRSet $recordSet */
+        foreach ($zone->getRrsets() as &$recordSet) {
+            if ('A' != $recordSet->getType()) {
+                continue;
+            }
+
+            if ('delete.example.com.' == $recordSet->getName()) {
+                $recordSet->setChangetype(Zone\RRSet::TYPE_DELETE);
+            } elseif ('www.example.com.' == $recordSet->getName()) {
+                /** @var Zone\Record $record */
+                $record = current($recordSet->getRecords());
+                $record->setContent('127.0.0.2');
+                $recordSet->setChangetype(Zone\RRSet::TYPE_REPLACE);
+            }
+        }
+
+        // Add new RRSet
+        $zone->addRrset((new Zone\RRSet())->setChangetype(Zone\RRSet::TYPE_CREATE)
+                                          ->setName('www2.example.com.')
+                                          ->setType('A')
+                                          ->setTtl(3600)
+                                          ->addRecord((new Zone\Record())->setContent('127.0.0.2'))
+        );
+
+        $lazyLoadZone = $this->getClient()->zones()->updateRRSets($zone, true);
+        $zone = $this->getClient()->zones()->get($zone->getId());
+        $this->assertEquals($lazyLoadZone, $zone);
+
+        $foundWWW2 = $foundWWW = false;
+
+        /** @var Zone\RRSet $rrset */
+        foreach ($zone->getRrsets() as $rrset) {
+            if ('www2.example.com.' == $rrset->getName()) {
+                $foundWWW2 = true;
+                $record = current($rrset->getRecords());
+                $this->assertEquals('127.0.0.2', $record->getContent());
+            } elseif ('www.example.com.' == $rrset->getName()) {
+                $foundWWW = true;
+                $this->assertEquals(1, count($rrset->getRecords()));
+                /** @var Record $record */
+                $record = current($rrset->getRecords());
+                $this->assertEquals('127.0.0.2', $record->getContent());
+            } elseif ('delete.example.com.' == $rrset->getName()) {
+                $this->fail('delete.example.com. not deleted!');
+            }
+        }
+
+        if (!$foundWWW2) {
+            $this->fail('Created record set www2.example.com not found');
+        }
+
+        if (!$foundWWW) {
+            $this->fail('Changed record set www.example.com not found');
+        }
+    }
+
+    /**
+     * @param Zone $zone
+     * @depends testCreate
+     */
+    public function testUpdateRRSets(Zone $zone)
+    {
+        /** @var Zone\RRSet $recordSet */
+        foreach ($zone->getRrsets() as &$recordSet) {
+            if ('A' != $recordSet->getType()) {
+                continue;
+            }
+
+            if ('delete.example.com.' == $recordSet->getName()) {
+                $recordSet->setChangetype(Zone\RRSet::TYPE_DELETE);
+            } elseif ('www.example.com.' == $recordSet->getName()) {
+                /** @var Zone\Record $record */
+                $record = current($recordSet->getRecords());
+                $record->setContent('127.0.0.2');
+                $recordSet->setChangetype(Zone\RRSet::TYPE_REPLACE);
+            }
+        }
+
+        // Add new RRSet
+        $zone->addRrset((new Zone\RRSet())->setChangetype(Zone\RRSet::TYPE_CREATE)
+            ->setName('www2.example.com.')
+            ->setType('A')
+            ->setTtl(3600)
+            ->addRecord((new Zone\Record())->setContent('127.0.0.2'))
+        );
+
+        $this->getClient()->zones()->updateRRSets($zone, false);
+        $zone = $this->getClient()->zones()->get($zone->getId());
+
+        $foundWWW2 = $foundWWW = false;
+
+        /** @var Zone\RRSet $rrset */
+        foreach ($zone->getRrsets() as $rrset) {
+            if ('www2.example.com.' == $rrset->getName()) {
+                $foundWWW2 = true;
+                $record = current($rrset->getRecords());
+                $this->assertEquals('127.0.0.2', $record->getContent());
+            } elseif ('www.example.com.' == $rrset->getName()) {
+                $foundWWW = true;
+                $this->assertEquals(1, count($rrset->getRecords()));
+                /** @var Record $record */
+                $record = current($rrset->getRecords());
+                $this->assertEquals('127.0.0.2', $record->getContent());
+            } elseif ('delete.example.com.' == $rrset->getName()) {
+                $this->fail('delete.example.com. not deleted!');
+            }
+        }
+
+        if (!$foundWWW2) {
+            $this->fail('Created record set www2.example.com not found');
+        }
+
+        if (!$foundWWW) {
+            $this->fail('Changed record set www.example.com not found');
+        }
+    }
+
+    public function testCreateExisting()
+    {
+        $this->expectException(\LogicException::class);
+
+        $zone = (new Zone())
+            ->setName('example.com.')
+            ->setKind(Zone::KIND_MASTER)
+        ;
+
+        $this->getClient()->zones()->create($zone, true);
+    }
+
+    /**
+     * @depends testCreate
+     */
+    public function testMissingHydrationClass(Zone $zone)
+    {
+        $this->expectException(\Exception::class);
+
+        $this->getClient()->zones()->get($zone, 'NotExisting');
     }
 
     /**
@@ -192,6 +430,68 @@ class ZonesEndpointTest extends AbstractTest
         $this->assertTrue(is_array($zones));
         $this->assertEquals(1, count($zones));
         Assert::allIsInstanceOf($zones, Zone::class);
+    }
+
+    /**
+     * @depends testCreate
+     */
+    public function testAxfrRetrieveFailsOnMaster(Zone $zone)
+    {
+        $this->expectException(\LogicException::class);
+        $this->getClient()->zones()->axfrRetrieve($zone);
+    }
+
+    /**
+     * @depends testCreateSlave
+     */
+    public function testAxfrRetrieve(Zone $zone)
+    {
+        $result = $this->getClient()->zones()->axfrRetrieve($zone);
+        $this->assertNull($result);
+    }
+
+    /**
+     * @depends testCreate
+     */
+    public function testNotify(Zone $zone)
+    {
+        $result = $this->getClient()->zones()->notify($zone);
+        $this->assertNull($result);
+        $this->markAsRisky();
+    }
+
+    /**
+     * @depends testCreate
+     */
+    public function testExportZone(Zone $zone)
+    {
+        $result = $this->getClient()->zones()->export($zone);
+        $this->assertEmpty($result);
+        $this->markAsRisky();
+    }
+
+    /**
+     * @depends testCreate
+     */
+    public function testCheck(Zone $zone)
+    {
+        $this->expectException(\LogicException::class);
+        $result = $this->getClient()->zones()->check($zone);
+        $this->markAsRisky();
+    }
+
+    /**
+     * @depends testCreateSlave
+     */
+    public function testRectifyFailsonSlave(Zone $zone)
+    {
+        $this->expectException(\LogicException::class);
+        $result = $this->getClient()->zones()->rectify($zone);
+    }
+
+    public function testRectifyOnDNSSecEnabled()
+    {
+        $this->markTestSkipped('not implemented yet');
     }
 
     /**

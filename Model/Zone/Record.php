@@ -13,13 +13,28 @@ declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient\Model\Zone;
 
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 class Record
 {
-    /** @var string */
+    /**
+     * @var string
+     * @Assert\NotBlank(groups={"CREATE", "UPDATE"})
+     * @Groups({"REPLACE", "CREATE"})
+     */
     private $content;
-    /** @var bool */
+
+    /**
+     * @var bool
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
     private $disabled = false;
-    /** @var  */
+
+    /**
+     * @var bool
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
     private $setPtr = false;
 
     /**

@@ -13,12 +13,18 @@ declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use GuzzleHttp\Psr7\Request;
 use Http\Client\HttpClient;
 use Http\Discovery\HttpClientDiscovery;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Mapping\ClassDiscriminatorFromClassMetadata;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
+use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -45,8 +51,11 @@ class Client
         $this->apiKey = $apiKey;
         $this->apiUri = sprintf('%s/%s', $apiHost, $this->basePath);
 
-        $normalizer = new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter(), null, new ReflectionExtractor());
-        $this->serializer = new Serializer([new DateTimeNormalizer(), $normalizer], ['json' => new JsonEncoder()]);
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $discriminator = new ClassDiscriminatorFromClassMetadata($classMetadataFactory);
+
+        $normalizer = new ObjectNormalizer($classMetadataFactory, new CamelCaseToSnakeCaseNameConverter(), new PropertyAccessor(), new ReflectionExtractor(), $discriminator);
+        $this->serializer = new Serializer([new DateTimeNormalizer(), new ArrayDenormalizer(), $normalizer], ['json' => new JsonEncoder()]);
     }
 
     /**
@@ -76,10 +85,6 @@ class Client
         $responseBody = $response->getBody()->getContents();
         $responseData = json_decode($responseBody);
 
-        //if (getenv('DEBUG')) {
-        //    dump([$uri, $method, isset($responseData->error) ? $responseData->error : [], $response->getStatusCode()]);
-        //}
-
         if ($response->getStatusCode() >= 300 && isset($responseData->error)) {
             throw new \LogicException(sprintf('Error on %s request %s: %s', $method, $uri, $responseData->error));
         } elseif ($response->getStatusCode() >= 300) {
@@ -106,7 +111,7 @@ class Client
 
         foreach ($dataObject as $data) {
             $result[] = $this->serializer->denormalize($data, $hydrationClass, null, [
-                ObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true,
+                ObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => false,
             ]);
         }
 

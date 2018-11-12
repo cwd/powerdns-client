@@ -32,9 +32,9 @@ abstract class AbstractEndpoint
                             ->getValidator();
     }
 
-    public function validateEntity($entity)
+    public function validateEntity($entity, $groups = null)
     {
-        $violations = $this->validator->validate($entity);
+        $violations = $this->validator->validate($entity, null, $groups);
 
         if (count($violations) > 0) {
             throw new ValidationException(

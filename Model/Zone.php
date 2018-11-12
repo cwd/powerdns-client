@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient\Model;
 
+use Cwd\PowerDNSClient\Model\Zone\RRSet;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Cwd\PowerDNSClient\Validator\Constraints as DNSAssert;
 
@@ -23,59 +25,116 @@ class Zone
     const KIND_SLAVE = 'Slave';
     const KIND_NATIVE = 'Native';
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     * @Groups({"CREATE", "DELETE"})
+     */
     private $id;
     /**
      * @var string
-     * @Assert\NotBlank()
-     * @DNSAssert\HasDotPostfix()
+     * @Assert\NotBlank(groups={"CREATE"})
+     * @DNSAssert\HasDotPostfix(groups={"CREATE"})
+     * @Groups({"CREATE", "DELETE"})
      */
     private $name;
     /**
      * @var string
      * @Assert\NotBlank()
      * @Assert\Choice(
-     *    choices= {"Zone"}
+     *    choices= {"Zone"},
+     *    groups={"CREATE", "UPDATE"}
      * )
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
      */
     private $type = self::TYPE;
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     * @Groups({"CREATE", "DELETE"})
+     */
     private $url;
     /**
      * @var string|null
      * @Assert\Choice(
-     *   choices = {"Master", "Slave", "Native"}
+     *   choices = {"Master", "Slave", "Native"},
+     *   groups={"CREATE", "UPDATE"}
      * )
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
      */
     private $kind;
-    /** @var RRSet[] */
+    /**
+     * @var array
+     * @Assert\Valid(groups={"CREATE", "UPDATE"})
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
     private $rrsets = [];
+
     /** @var int|null */
     private $serial;
     /** @var int|null */
     private $notifiedSerial;
-    /** @var string[] */
+    /**
+     * @var string[]
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
     private $masters = [];
-    /** @var bool */
+    /**
+     * @var bool
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
     private $dnssec = false;
-    /** @var string|null */
+    /**
+     * @var string|null
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
     private $nsec3param;
-    /** @var bool */
+
+    /**
+     * @var bool
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
     private $nsec3narrow = false;
-    /** @var bool */
+
+    /**
+     * @var bool
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
     private $predisgned = false;
-    /** @var string|null */
+
+    /**
+     * @var string|null
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
     private $soaEdit;
-    /** @var string|null */
+
+    /**
+     * @var string|null
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
     private $soaEditApi;
-    /** @var bool */
+
+    /**
+     * @var bool
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
     private $apiRectify = false;
-    /** @var string|null */
+
+    /**
+     * @var string|null
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
     private $zone;
-    /** @var string|null */
+
+    /**
+     * @var string|null
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
     private $account;
-    /** @var string[] */
+
+    /**
+     * @var string[]
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
     private $nameservers = [];
 
     /**
@@ -179,7 +238,7 @@ class Zone
     }
 
     /**
-     * @return RRSet[]
+     * @return array<RRSet>
      */
     public function getRrsets(): array
     {
@@ -187,13 +246,20 @@ class Zone
     }
 
     /**
-     * @param RRSet[] $rrsets
+     * @param array $rrsets
      *
      * @return Zone
      */
     public function setRrsets(array $rrsets): Zone
     {
         $this->rrsets = $rrsets;
+
+        return $this;
+    }
+
+    public function addRrset(RRSet $rrset): Zone
+    {
+        $this->rrsets[] = $rrset;
 
         return $this;
     }

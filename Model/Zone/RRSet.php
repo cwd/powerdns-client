@@ -13,19 +13,67 @@ declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient\Model\Zone;
 
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Cwd\PowerDNSClient\Validator\Constraints as DNSAssert;
+
 class RRSet
 {
-    /** @var string */
+    const TYPE_REPLACE = 'REPLACE';
+    const TYPE_DELETE = 'DELETE';
+    const TYPE_CREATE = 'REPLACE'; // Yes this is by design!
+
+    /**
+     * @var string
+     * @Assert\NotBlank(groups={"CREATE", "UPDATE"})
+     * @DNSAssert\HasDotPostfix(groups={"CREATE", "UPDATE"})
+     *
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
     private $name;
-    /** @var string */
+
+    /**
+     * @var string
+     * @Assert\NotBlank(groups={"CREATE", "UPDATE"})
+     * @Assert\Choice(
+     *    groups={"CREATE", "UPDATE"},
+     *    choices={
+     *     "A", "AAAA", "AFSDB", "ALIAS", "CAA", "CERT", "CDNSKEY", "CDS", "CNAME", "DNSKEY", "DNAME", "DS", "HINFO",
+     *     "KEY", "LOC", "MX", "NAPTR", "NS", "NSEC, NSEC3, NSEC3PARAM", "OPENPGPKEY", "PTR", "RP", "RRSIG", "SOA",
+     *     "SPF", "SSHFP", "SRV", "TKEY, TSIG", "TLSA", "SMIMEA", "TXT", "URI"
+     *    }
+     * )
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
     private $type;
-    /** @var int */
+    /**
+     * @var int
+     * @Groups({"REPLACE", "CREATE"})
+     */
     private $ttl;
-    /** @var string */
+
+    /**
+     * @var string
+     * @Assert\Choice(
+     *    choices={"REPLACE", "DELETE", "CREATE"},
+     *    groups={"CREATE", "UPDATE"}
+     * )
+     * @Groups({"REPLACE", "DELETE"})
+     */
     private $changetype;
-    /** @var Record[] */
+
+    /**
+     * @var Record[]
+     * @Assert\Valid(groups={"CREATE", "UPDATE"})
+     * @Groups({"REPLACE", "CREATE"})
+     */
     private $records = [];
-    /** @var Comment[] */
+
+    /**
+     * @var Comment[]
+     * @Assert\Valid(groups={"CREATE", "UPDATE"})
+     * @Groups({"REPLACE", "CREATE"})
+     */
     private $comments = [];
 
     /**
@@ -91,7 +139,7 @@ class RRSet
     /**
      * @return string
      */
-    public function getChangetype(): string
+    public function getChangetype(): ?string
     {
         return $this->changetype;
     }
@@ -101,7 +149,7 @@ class RRSet
      *
      * @return RRSet
      */
-    public function setChangetype(string $changetype): RRSet
+    public function setChangetype(?string $changetype): RRSet
     {
         $this->changetype = $changetype;
 
@@ -128,6 +176,13 @@ class RRSet
         return $this;
     }
 
+    public function addRecord(Record $record): RRSet
+    {
+        $this->records[] = $record;
+
+        return $this;
+    }
+
     /**
      * @return Comment[]
      */
@@ -143,7 +198,15 @@ class RRSet
      */
     public function setComments(array $comments): RRSet
     {
+        \Webmozart\Assert\Assert::allIsInstanceOf($comments, Comment::class);
         $this->comments = $comments;
+
+        return $this;
+    }
+
+    public function addComment(Comment $comment): RRSet
+    {
+        $this->comments[] = $comment;
 
         return $this;
     }
