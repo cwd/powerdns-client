@@ -13,10 +13,52 @@ declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient\Model;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
 class Metadata
 {
-    /** @var string */
+    // https://doc.powerdns.com/md/httpapi/api_spec/#zone-metadata
+    const UPDATE_FORBIDDEN = [
+        'NSEC3PARAM',
+        'NSEC3NARROW',
+        'PRESIGNED',
+        'LUA-AXFR-SCRIPT',
+    ];
+
+    // https://doc.powerdns.com/authoritative/domainmetadata.html
+    const VALID_KINDs = [
+        'ALLOW-AXFR-FROM',
+        'API-RECTIFY',
+        'AXFR-SOURCE',
+        'ALLOW-DNSUPDATE-FROM',
+        'TSIG-ALLOW-DNSUPDATE',
+        'FORWARD-DNSUPDATE',
+        'SOA-EDIT-DNSUPDATE',
+        'NOTIFY-DNSUPDATE',
+        'ALSO-NOTIFY',
+        'AXFR-MASTER-TSIG',
+        'GSS-ALLOW-AXFR-PRINCIPAL',
+        'GSS-ACCEPTOR-PRINCIPAL',
+        'IXFR',
+        'LUA-AXFR-SCRIPT',
+        'NSEC3NARROW',
+        'NSEC3PARAM',
+        'PRESIGNED',
+        'PUBLISH-CDNSKEY',
+        'PUBLISH-CDS',
+        'SOA-EDIT',
+        'SOA-EDIT-API',
+        'TSIG-ALLOW-AXFR',
+        'TSIG-ALLOW-DNSUPDATE',
+    ];
+
+    /**
+     * @var string
+     * @Assert\NotBlank(groups={"CREATE", "UPDATE"})
+     */
     private $kind;
+
     /** @var string[] */
     private $metadata = [];
 
@@ -58,5 +100,39 @@ class Metadata
         $this->metadata = $metadata;
 
         return $this;
+    }
+
+    /**
+     * @param ExecutionContextInterface $context
+     * @param $payload
+     * @Assert\Callback(groups={"CREATE", "UPDATE"})
+     */
+    public function validateKinds(ExecutionContextInterface $context, $payload)
+    {
+        if (in_array($this->getKind(), self::VALID_KINDs)) {
+            return;
+        }
+
+        if (0 === strpos(strtoupper($this->getKind()), 'X-')) {
+            return;
+        }
+
+        $context->buildViolation(sprintf('Kind "%s" not in valid kinds or does not start with "X-"', $this->getKind()))
+            ->atPath('kind')
+            ->addViolation();
+    }
+
+    /**
+     * @param ExecutionContextInterface $context
+     * @param $payload
+     * @Assert\Callback(groups={"UPDATE"})
+     */
+    public function validateForbidden(ExecutionContextInterface $context, $payload)
+    {
+        if (in_array($this->getKind(), self::UPDATE_FORBIDDEN)) {
+            $context->buildViolation(sprintf('Kind "%s" cant be updated', $this->getKind()))
+                ->atPath('kind')
+                ->addViolation();
+        }
     }
 }

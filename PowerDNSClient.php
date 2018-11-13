@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient;
 
+use Cwd\PowerDNSClient\Endpoints\MetadataEndpoint;
 use Cwd\PowerDNSClient\Endpoints\ServersEndpoint;
 use Cwd\PowerDNSClient\Endpoints\ZonesEndpoint;
+use Cwd\PowerDNSClient\Model\Zone;
 
 class PowerDNSClient
 {
@@ -33,6 +35,17 @@ class PowerDNSClient
     public function __construct(Client $client)
     {
         $this->client = $client;
+    }
+
+    public function metadata($zone): MetadataEndpoint
+    {
+        $zoneId = $zone;
+
+        if ($zone instanceof Zone) {
+            $zoneId = $zone->getId();
+        }
+
+        return new MetadataEndpoint($this->getClient(), $this->getDefaultServerId(), $zoneId);
     }
 
     public function servers(): ServersEndpoint
