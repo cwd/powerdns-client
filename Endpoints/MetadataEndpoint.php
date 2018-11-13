@@ -46,7 +46,7 @@ class MetadataEndpoint extends AbstractEndpoint
     /**
      * @param string $kind
      *
-     * @return Metadata[]
+     * @return Metadata
      *
      * @throws \Http\Client\Exception
      */
@@ -60,7 +60,7 @@ class MetadataEndpoint extends AbstractEndpoint
      * @param bool     $lacyLoad
      * @param string   $hydrationClass
      *
-     * @return Metadata[]|null
+     * @return Metadata|null
      *
      * @throws \Http\Client\Exception
      */
@@ -83,7 +83,7 @@ class MetadataEndpoint extends AbstractEndpoint
      * @param Metadata $metadata
      * @param bool     $lacyLoad
      *
-     * @return Metadata[]|null
+     * @return Metadata|null
      *
      * @throws \Http\Client\Exception
      */
