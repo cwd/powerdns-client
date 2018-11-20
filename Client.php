@@ -73,7 +73,11 @@ class Client
      */
     public function call($payload = null, $uri, $hydrationClass = null, $isList = false, $method = 'GET', array $queryParams = [])
     {
-        $uri = sprintf('%s/%s?%s', $this->apiUri, $uri, http_build_query($queryParams));
+        if (count($queryParams) > 0) {
+            $uri = sprintf('%s/%s?%s', $this->apiUri, $uri, http_build_query($queryParams));
+        } else {
+            $uri = sprintf('%s/%s', $this->apiUri, $uri);
+        }
         $uri = rtrim($uri, '/');
 
         $request = new Request($method, $uri, [

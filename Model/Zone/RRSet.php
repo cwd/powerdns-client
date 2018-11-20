@@ -19,9 +19,9 @@ use Cwd\PowerDNSClient\Validator\Constraints as DNSAssert;
 
 class RRSet
 {
-    const TYPE_REPLACE = 'REPLACE';
-    const TYPE_DELETE = 'DELETE';
-    const TYPE_CREATE = 'REPLACE'; // Yes this is by design!
+    public const TYPE_REPLACE = 'REPLACE';
+    public const TYPE_DELETE = 'DELETE';
+    public const TYPE_CREATE = 'REPLACE'; // Yes this is by design!
 
     /**
      * @var string

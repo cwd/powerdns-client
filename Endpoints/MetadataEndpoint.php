@@ -18,8 +18,10 @@ use Cwd\PowerDNSClient\Model\Metadata;
 
 class MetadataEndpoint extends AbstractEndpoint
 {
-    const ENDPOINT_LIST = 'servers/%s/zones/%s/metadata';
-    const ENDPOINT_ELEMENT = 'servers/%s/zones/%s/metadata/%s';
+    use UriHelperTrait;
+
+    private const ENDPOINT_LIST = 'servers/%s/zones/%s/metadata';
+    private const ENDPOINT_ELEMENT = 'servers/%s/zones/%s/metadata/%s';
 
     private $zoneId;
 
@@ -45,12 +47,13 @@ class MetadataEndpoint extends AbstractEndpoint
 
     /**
      * @param string $kind
+     * @param string $hydrationClass
      *
      * @return Metadata
      *
      * @throws \Http\Client\Exception
      */
-    public function get(string $kind, $hydrationClass = Metadata::class): ?Metadata
+    public function get(string $kind, string $hydrationClass = Metadata::class): ?Metadata
     {
         return $this->getClient()->call(null, $this->uriHelper($kind), $hydrationClass, false, 'GET');
     }
@@ -82,12 +85,13 @@ class MetadataEndpoint extends AbstractEndpoint
     /**
      * @param Metadata $metadata
      * @param bool     $lacyLoad
+     * @param string   $hydrationClass
      *
      * @return Metadata|null
      *
      * @throws \Http\Client\Exception
      */
-    public function update(Metadata $metadata, $lacyLoad = true, $hydrationClass = Metadata::class): ?Metadata
+    public function update(Metadata $metadata, $lacyLoad = true, string $hydrationClass = Metadata::class): ?Metadata
     {
         $this->validateEntity($metadata, ['UPDATE']);
         $payload = $this->getClient()->getSerializer()->serialize($metadata, 'json');
@@ -113,10 +117,5 @@ class MetadataEndpoint extends AbstractEndpoint
             $kind = $metadata->getKind();
         }
         $this->getClient()->call(null, $this->uriHelper($kind), null, false, 'DELETE');
-    }
-
-    private function uriHelper($kind): string
-    {
-        return sprintf(self::ENDPOINT_ELEMENT, $this->defaultServerId, $this->zoneId, $kind);
     }
 }

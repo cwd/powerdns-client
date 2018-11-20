@@ -90,7 +90,7 @@ class Record
      *
      * @return Record
      */
-    public function setSetPtr($setPtr)
+    public function setSetPtr($setPtr): Record
     {
         $this->setPtr = $setPtr;
 

@@ -32,13 +32,12 @@ abstract class AbstractEndpoint
                             ->getValidator();
     }
 
-    public function validateEntity($entity, $groups = null)
+    public function validateEntity($entity, $groups = null): bool
     {
         $violations = $this->validator->validate($entity, null, $groups);
-
-        if (count($violations) > 0) {
+        if (\count($violations) > 0) {
             throw new ValidationException(
-                sprintf('Entity %s does not validate to spezification', get_class($entity)),
+                sprintf('Entity %s does not validate to spezification', \get_class($entity)),
                 0,
                 null,
                 $violations

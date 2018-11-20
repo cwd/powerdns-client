@@ -17,8 +17,15 @@ use Cwd\PowerDNSClient\Model\Server;
 
 class ServersEndpoint extends AbstractEndpoint
 {
-    const ENDPOINT = 'servers/%s';
+    private const ENDPOINT = 'servers/%s';
 
+    /**
+     * @param null|string $serverId
+     *
+     * @return Server
+     *
+     * @throws \Http\Client\Exception
+     */
     public function get(?string $serverId = null): Server
     {
         if (null === $serverId) {
@@ -29,7 +36,7 @@ class ServersEndpoint extends AbstractEndpoint
     }
 
     /**
-     * @return Servers[]
+     * @return Server[]
      *
      * @throws \Http\Client\Exception
      */

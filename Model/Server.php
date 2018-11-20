@@ -16,7 +16,7 @@ namespace Cwd\PowerDNSClient\Model;
 class Server
 {
     /** @var string */
-    private $type;
+    private $type = 'Server';
     /** @var string */
     private $id;
     /** @var string */

@@ -13,14 +13,52 @@ declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient\Model;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
 class Cryptokey
 {
+    protected const VALID_KEYTYPES = [
+        'ksk',
+        'zsk',
+        'csk',
+    ];
+
+    // https://doc.powerdns.com/md/authoritative/dnssec/#supported-algorithms
+    // https://github.com/operasoftware/dns-ui/issues/57#issuecomment-377553394
+    public const VALID_ALGORITHMS = [
+        1 => 'RSAMD5',
+        2 => 'DH',
+        3 => 'DSA',
+
+        5 => 'RSASHA1',
+        6 => 'DSA-NSEC3-SHA1',
+        7 => 'RSASHA1-NSEC3-SHA1',
+        8 => 'RSASHA256',
+
+        10 => 'RSASHA512',
+
+        12 => 'ECC-GOST',
+        13 => 'ECDSAP256SHA256',
+        14 => 'ECDSAP384SHA384',
+        15 => 'ED25519',
+        16 => 'ED448',
+    ];
+
     /** @var string */
-    private $type;
-    /** @var string */
+    private $type = 'Cryptokey';
+
+    /** @var int */
     private $id;
-    /** @var string */
+    /**
+     * @var string
+     * @Assert\Choice(
+     *   choices = {"ksk", "zsk", "csk"},
+     *   groups={"CREATE"}
+     * )
+     */
     private $keytype;
+
     /** @var bool */
     private $active = false;
     /** @var string */
@@ -57,17 +95,17 @@ class Cryptokey
     /**
      * @return string
      */
-    public function getId(): string
+    public function getId(): ?int
     {
         return $this->id;
     }
 
     /**
-     * @param string $id
+     * @param int $id
      *
      * @return Cryptokey
      */
-    public function setId(string $id): Cryptokey
+    public function setId(int $id): Cryptokey
     {
         $this->id = $id;
 
@@ -77,7 +115,7 @@ class Cryptokey
     /**
      * @return string
      */
-    public function getKeytype(): string
+    public function getKeytype(): ?string
     {
         return $this->keytype;
     }
@@ -117,7 +155,7 @@ class Cryptokey
     /**
      * @return string
      */
-    public function getDnskey(): string
+    public function getDnskey(): ?string
     {
         return $this->dnskey;
     }
@@ -157,7 +195,7 @@ class Cryptokey
     /**
      * @return string
      */
-    public function getPrivatekey(): string
+    public function getPrivatekey(): ?string
     {
         return $this->privatekey;
     }
@@ -175,19 +213,19 @@ class Cryptokey
     }
 
     /**
-     * @return string
+     * @return string|int|null
      */
-    public function getAlgorithm(): string
+    public function getAlgorithm()
     {
         return $this->algorithm;
     }
 
     /**
-     * @param string $algorithm
+     * @param string|int $algorithm
      *
      * @return Cryptokey
      */
-    public function setAlgorithm(string $algorithm): Cryptokey
+    public function setAlgorithm($algorithm): Cryptokey
     {
         $this->algorithm = $algorithm;
 
@@ -197,7 +235,7 @@ class Cryptokey
     /**
      * @return int
      */
-    public function getBits(): int
+    public function getBits(): ?int
     {
         return $this->bits;
     }
@@ -212,5 +250,58 @@ class Cryptokey
         $this->bits = $bits;
 
         return $this;
+    }
+
+    /**
+     * Reconstruct the DNSKEY RDATA wire format (https://tools.ietf.org/html/rfc4034#section-2.1)
+     * by merging the flags, protocol, algorithm, and the base64-decoded key data
+     * https://github.com/operasoftware/dns-ui/commit/35821799f7c2a2e17e9178612e24147dfe7c0867#diff-0d3376b053b1313ed26a84a0c61ef0f2R344
+     * by Thomas Pike.
+     *
+     * @return string
+     */
+    public function getTag(): ?int
+    {
+        if (null === $this->dnskey) {
+            return null;
+        }
+
+        list($flags, $protocol, $algorithm, $keydata) = preg_split('/\s+/', $this->dnskey);
+
+        $wire_format = pack('nCC', $flags, $protocol, $algorithm).base64_decode($keydata);
+        // Split data into (zero-indexed) array of bytes
+        $keyvalues = array_values(unpack('C*', $wire_format));
+        // Follow algorithm from RFC 4034 Appendix B (https://tools.ietf.org/html/rfc4034#appendix-B)
+        $ac = 0;
+        foreach ($keyvalues as $i => $keyvalue) {
+            $ac += ($i & 1) ? $keyvalue : $keyvalue << 8;
+        }
+        $ac += ($ac >> 16) & 0xFFFF;
+
+        return $ac & 0xFFFF;
+    }
+
+    /**
+     * @param ExecutionContextInterface $context
+     * @param $payload
+     * @Assert\Callback(groups={"CREATE"})
+     */
+    public function validateAlgos(ExecutionContextInterface $context, $payload): void
+    {
+        if (null === $this->getAlgorithm()) {
+            return;
+        }
+
+        if (\is_integer($this->getAlgorithm()) && !\array_key_exists($this->getAlgorithm(), self::VALID_ALGORITHMS)) {
+            $context->buildViolation(sprintf('Algorithm "%s" is unknown', $this->getAlgorithm()))
+                ->atPath('algorithm')
+                ->addViolation();
+        }
+
+        if (\is_string($this->getAlgorithm()) && !\in_array($this->getAlgorithm(), self::VALID_ALGORITHMS, false)) {
+            $context->buildViolation(sprintf('Algorithm "%s" is unknown', $this->getAlgorithm()))
+                ->atPath('algorithm')
+                ->addViolation();
+        }
     }
 }

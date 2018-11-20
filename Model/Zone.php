@@ -20,10 +20,10 @@ use Cwd\PowerDNSClient\Validator\Constraints as DNSAssert;
 
 class Zone
 {
-    const TYPE = 'Zone';
-    const KIND_MASTER = 'Master';
-    const KIND_SLAVE = 'Slave';
-    const KIND_NATIVE = 'Native';
+    protected const TYPE = 'Zone';
+    public const KIND_MASTER = 'Master';
+    public const KIND_SLAVE = 'Slave';
+    public const KIND_NATIVE = 'Native';
 
     /**
      * @var string|null

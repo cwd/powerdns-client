@@ -23,7 +23,7 @@ class HasDotPostfix extends Constraint
 {
     public $message = 'The zone name "{{ string }}" must end with "."';
 
-    public function validatedBy()
+    public function validatedBy(): string
     {
         return ZoneNameValidator::class;
     }

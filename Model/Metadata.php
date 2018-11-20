@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 class Metadata
 {
     // https://doc.powerdns.com/md/httpapi/api_spec/#zone-metadata
-    const UPDATE_FORBIDDEN = [
+    protected const UPDATE_FORBIDDEN = [
         'NSEC3PARAM',
         'NSEC3NARROW',
         'PRESIGNED',
@@ -27,7 +27,7 @@ class Metadata
     ];
 
     // https://doc.powerdns.com/authoritative/domainmetadata.html
-    const VALID_KINDs = [
+    protected const VALID_KINDs = [
         'ALLOW-AXFR-FROM',
         'API-RECTIFY',
         'AXFR-SOURCE',
@@ -107,13 +107,13 @@ class Metadata
      * @param $payload
      * @Assert\Callback(groups={"CREATE", "UPDATE"})
      */
-    public function validateKinds(ExecutionContextInterface $context, $payload)
+    public function validateKinds(ExecutionContextInterface $context, $payload): void
     {
-        if (in_array($this->getKind(), self::VALID_KINDs)) {
+        if (\in_array($this->getKind(), self::VALID_KINDs, false)) {
             return;
         }
 
-        if (0 === strpos(strtoupper($this->getKind()), 'X-')) {
+        if (0 === stripos($this->getKind(), 'X-')) {
             return;
         }
 
@@ -127,9 +127,9 @@ class Metadata
      * @param $payload
      * @Assert\Callback(groups={"UPDATE"})
      */
-    public function validateForbidden(ExecutionContextInterface $context, $payload)
+    public function validateForbidden(ExecutionContextInterface $context, $payload): void
     {
-        if (in_array($this->getKind(), self::UPDATE_FORBIDDEN)) {
+        if (\in_array($this->getKind(), self::UPDATE_FORBIDDEN, false)) {
             $context->buildViolation(sprintf('Kind "%s" cant be updated', $this->getKind()))
                 ->atPath('kind')
                 ->addViolation();
