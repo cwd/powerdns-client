@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient\Endpoints;
 
+use Cwd\PowerDNSClient\Model\SearchResult;
 use Cwd\PowerDNSClient\Model\Zone;
 
 class ZonesEndpoint extends AbstractEndpoint
@@ -107,7 +108,7 @@ class ZonesEndpoint extends AbstractEndpoint
 
         $payload = $this->getClient()->getSerializer()->serialize($zone, 'json', ['groups' => ['CREATE']]);
 
-        return $this->getClient()->call($payload, sprintf(self::ENDPOINT_LIST, $this->defaultServerId), $hydrationClass, false, 'POST', ['rrsets' => $rrsets]);
+        return $this->getClient()->call($payload, sprintf(self::ENDPOINT_LIST, $this->defaultServerId), $hydrationClass, false, 'POST');
     }
 
     /**
@@ -139,7 +140,7 @@ class ZonesEndpoint extends AbstractEndpoint
     {
         $queryParams = [];
         if (null !== $zoneName) {
-            $queryParams['zone'] = $zoneName;
+            $queryParams['zone[]'] = $zoneName;
         }
 
         return $this->getClient()->call(null, sprintf(self::ENDPOINT_LIST, $this->defaultServerId), $hydrationClass, true, 'GET', $queryParams);
@@ -219,5 +220,15 @@ class ZonesEndpoint extends AbstractEndpoint
         }
 
         return $this->getClient()->call(null, sprintf(self::ENDPOINT_ELEMENT, $this->defaultServerId, $zoneId).'/rectify', null, false, 'PUT');
+    }
+
+    public function search($term, $maxResults = 100)
+    {
+        $queryParams = [
+            'q' => $term,
+            'max' => $maxResults,
+        ];
+
+        return $this->getClient()->call(null, sprintf('servers/%s/search-data', $this->defaultServerId), SearchResult::class, true, 'GET', $queryParams);
     }
 }

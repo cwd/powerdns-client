@@ -30,5 +30,7 @@ services:
             MYSQL_USER: dev
             MYSQL_PASS: dev
             MYSQL_DB: powerdns
+        ports:
+            - 8000:80
               
                     

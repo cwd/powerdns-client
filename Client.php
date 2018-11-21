@@ -15,7 +15,6 @@ namespace Cwd\PowerDNSClient;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use GuzzleHttp\Psr7\Request;
-use Http\Client\HttpClient;
 use Http\Discovery\HttpClientDiscovery;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
@@ -37,7 +36,7 @@ class Client
 
     private $apiUri;
 
-    /** @var HttpClient */
+    /** @var GuzzleClient */
     private $client;
 
     /** @var Serializer */
@@ -45,11 +44,12 @@ class Client
 
     public function __construct($apiHost, $apiKey, ?GuzzleClient $client = null)
     {
-        if (null === $client) {
-            $this->client = HttpClientDiscovery::find();
-        }
         $this->apiKey = $apiKey;
         $this->apiUri = sprintf('%s/%s', $apiHost, $this->basePath);
+        if (null === $client) {
+            //$this->client  = new GuzzleClient(['base_uri' => $this->apiUri]);
+            $this->client = HttpClientDiscovery::find();
+        }
 
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $discriminator = new ClassDiscriminatorFromClassMetadata($classMetadataFactory);
@@ -73,12 +73,11 @@ class Client
      */
     public function call($payload = null, $uri, $hydrationClass = null, $isList = false, $method = 'GET', array $queryParams = [])
     {
+        $uri = rtrim(sprintf('%s/%s', $this->apiUri, $uri), '/');
+
         if (count($queryParams) > 0) {
-            $uri = sprintf('%s/%s?%s', $this->apiUri, $uri, http_build_query($queryParams));
-        } else {
-            $uri = sprintf('%s/%s', $this->apiUri, $uri);
+            $uri .= '?'.http_build_query($queryParams);
         }
-        $uri = rtrim($uri, '/');
 
         $request = new Request($method, $uri, [
             'X-API-Key' => $this->apiKey,
@@ -86,19 +85,22 @@ class Client
         ], $payload);
 
         $response = $this->client->sendRequest($request);
+
         $responseBody = $response->getBody()->getContents();
         $responseData = json_decode($responseBody);
 
         if ($response->getStatusCode() >= 300 && isset($responseData->error)) {
             throw new \LogicException(sprintf('Error on %s request %s: %s', $method, $uri, $responseData->error));
-        } elseif ($response->getStatusCode() >= 300) {
+        }
+        if ($response->getStatusCode() >= 300) {
             $message = isset($responseData->message) ?? 'Unknown';
             throw new \Exception(sprintf('Error on request %s: %s', $response->getStatusCode(), $message));
         }
 
         if (null !== $hydrationClass && class_exists($hydrationClass)) {
             return $this->denormalizeObject($hydrationClass, $responseData, $isList);
-        } elseif (null !== $hydrationClass && !class_exists($hydrationClass)) {
+        }
+        if (null !== $hydrationClass && !class_exists($hydrationClass)) {
             throw new \Exception(sprintf('HydrationClass (%s) does not exist', $hydrationClass));
         }
 

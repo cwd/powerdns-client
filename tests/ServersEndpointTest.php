@@ -13,10 +13,56 @@ declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient\Tests;
 
+use Cwd\PowerDNSClient\Model\CacheFlushResult;
+use Cwd\PowerDNSClient\Model\Config;
 use Cwd\PowerDNSClient\Model\Server;
+use Cwd\PowerDNSClient\Model\Zone;
+use Webmozart\Assert\Assert;
 
 class ServersEndpointTest extends AbstractTest
 {
+    const ZONE = 'metadata.net.';
+
+    public function setup()
+    {
+        $zone = (new Zone())
+            ->setName(self::ZONE)
+            ->setKind(Zone::KIND_MASTER)
+            ->addRrset(
+                (new Zone\RRSet())->setName('www.'.self::ZONE)
+                    ->setType('A')
+                    ->setTtl(3600)
+                    ->addRecord(
+                        (new Zone\Record())->setContent('127.0.0.1')
+                            ->setDisabled(false)
+                    )
+                    ->addComment(
+                        (new Zone\Comment())->setContent('Test Test')
+                            ->setAccount('Max Mustermann')
+                    )
+            )
+            ->addRrset((new Zone\RRSet())->setName('delete.'.self::ZONE)
+                ->setType('A')
+                ->setTtl(3600)
+                ->addRecord(
+                    (new Zone\Record())->setContent('127.0.0.1')
+                        ->setDisabled(false)
+                )
+                ->addComment((new Zone\Comment())->setContent('test')->setAccount('Maxi'))
+            )
+        ;
+
+        $zone = $this->getClient()->zones()->create($zone, true);
+        $this->assertNotEmpty($zone->getId());
+
+        return $zone;
+    }
+
+    public function tearDown()
+    {
+        $this->getClient()->zones()->delete(self::ZONE);
+    }
+
     public function testStatistics()
     {
         $stats = $this->getClient()->servers()->statistics();
@@ -45,5 +91,24 @@ class ServersEndpointTest extends AbstractTest
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Error on request 404:');
         $server = $this->getClient()->servers()->get('foobar');
+    }
+
+    public function testCacheFlush()
+    {
+        $result = $this->getClient()->servers()->cacheFlush(self::ZONE);
+        $this->assertInstanceOf(CacheFlushResult::class, $result);
+    }
+
+    public function testCacheFlushNoneCanonical()
+    {
+        $this->expectException(\LogicException::class);
+        $this->getClient()->servers()->cacheFlush('hostname');
+    }
+
+    public function testConfigAll()
+    {
+        $result = $this->getClient()->servers()->config();
+        $this->assertGreaterThan(100, count($result));
+        Assert::allIsInstanceOf($result, Config::class);
     }
 }

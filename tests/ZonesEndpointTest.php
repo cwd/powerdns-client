@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient\Tests;
 
+use Cwd\PowerDNSClient\Model\SearchResult;
 use Cwd\PowerDNSClient\Model\Zone;
 use Cwd\PowerDNSClient\Validator\ValidationException;
 use Webmozart\Assert\Assert;
@@ -411,11 +412,14 @@ class ZonesEndpointTest extends AbstractTest
     public function testAllWithNotFoundName()
     {
         $this->markAsRisky('Does not work as documented');
+        //$this->getClient()->getClient()->setDebug(true);
 
-        $zones = $this->getClient()->zones()->all('asdf.com');
+        $zones = $this->getClient()->zones()->all('example.com.');
         $this->assertTrue(is_array($zones));
         //$this->assertEquals(0, count($zones));
         Assert::allIsInstanceOf($zones, Zone::class);
+
+        //$this->getClient()->getClient()->setDebug(false);
     }
 
     /**
@@ -492,6 +496,44 @@ class ZonesEndpointTest extends AbstractTest
     public function testRectifyOnDNSSecEnabled()
     {
         $this->markTestSkipped('not implemented yet');
+    }
+
+    /**
+     * @depends testCreate
+     */
+    public function testSearch()
+    {
+        $result = $this->getClient()->zones()->search('example*');
+        $this->assertCount(3, $result);
+        Assert::allIsInstanceOf($result, SearchResult::class);
+    }
+
+    /**
+     * @depends testCreate
+     */
+    public function testSearchMax()
+    {
+        $result = $this->getClient()->zones()->search('example*', 1);
+        $this->assertCount(2, $result);
+        Assert::allIsInstanceOf($result, SearchResult::class);
+    }
+
+    /**
+     * @depends testCreate
+     */
+    public function testSearchSpecific()
+    {
+        $result = $this->getClient()->zones()->search('example.com');
+        $this->assertCount(2, $result);
+    }
+
+    /**
+     * @depends testCreate
+     */
+    public function testSearchEmpty()
+    {
+        $result = $this->getClient()->zones()->search('foobar*', 2);
+        $this->assertCount(0, $result);
     }
 
     /**
