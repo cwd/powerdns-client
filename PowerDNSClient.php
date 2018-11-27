@@ -13,8 +13,11 @@ declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient;
 
+use Cwd\PowerDNSClient\Endpoints\CryptokeysEndpoint;
+use Cwd\PowerDNSClient\Endpoints\MetadataEndpoint;
 use Cwd\PowerDNSClient\Endpoints\ServersEndpoint;
 use Cwd\PowerDNSClient\Endpoints\ZonesEndpoint;
+use Cwd\PowerDNSClient\Model\Zone;
 
 class PowerDNSClient
 {
@@ -27,12 +30,26 @@ class PowerDNSClient
     /** @var ZonesEndpoint */
     private $zonesEndpoint;
 
+    /** @var CryptokeysEndpoint */
+    private $cryptokeysEndpoint;
+
     /** @var string */
     private $defaultServerId = 'localhost';
 
     public function __construct(Client $client)
     {
         $this->client = $client;
+    }
+
+    public function metadata($zone): MetadataEndpoint
+    {
+        $zoneId = $zone;
+
+        if ($zone instanceof Zone) {
+            $zoneId = $zone->getId();
+        }
+
+        return new MetadataEndpoint($this->getClient(), $this->getDefaultServerId(), $zoneId);
     }
 
     public function servers(): ServersEndpoint
@@ -51,6 +68,17 @@ class PowerDNSClient
         }
 
         return $this->zonesEndpoint;
+    }
+
+    public function cryptokeys($zone): CryptokeysEndpoint
+    {
+        $zoneId = $zone;
+
+        if ($zone instanceof Zone) {
+            $zoneId = $zone->getId();
+        }
+
+        return new CryptokeysEndpoint($this->getClient(), $this->getDefaultServerId(), $zoneId);
     }
 
     /**

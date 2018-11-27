@@ -1,7 +1,7 @@
 {
   "name": "cwd/powerdns-client",
   "description": "",
-  "keywords": ["powerns", "api-client", "client", "dns", "bundle"],
+  "keywords": ["powerdns", "api-client", "client", "dns", "bundle"],
   "type": "library",
   "license": "MIT",
   "authors": [

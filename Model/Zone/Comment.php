@@ -13,12 +13,23 @@ declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient\Model\Zone;
 
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 class Comment
 {
-    /** @var string */
+    /**
+     * @var string
+     * @Assert\NotBlank(groups={"CREATE", "UPDATE"})
+     * @Groups({"REPLACE", "CREATE"})
+     */
     private $content;
 
-    /** @var string */
+    /**
+     * @var string
+     * @Groups({"REPLACE", "CREATE"})
+     * @Assert\NotBlank(groups={"CREATE", "UPDATE"})
+     */
     private $account;
 
     /** @var int */
@@ -47,7 +58,7 @@ class Comment
     /**
      * @return string
      */
-    public function getAccount(): string
+    public function getAccount(): ?string
     {
         return $this->account;
     }
@@ -57,7 +68,7 @@ class Comment
      *
      * @return Comment
      */
-    public function setAccount(string $account): Comment
+    public function setAccount(?string $account): Comment
     {
         $this->account = $account;
 
@@ -67,7 +78,7 @@ class Comment
     /**
      * @return int
      */
-    public function getModifiedAt(): int
+    public function getModifiedAt(): ?int
     {
         return $this->modifiedAt;
     }

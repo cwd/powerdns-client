@@ -12,7 +12,7 @@ variables:
     APP_ENV: test
 
   services:
-    - name: dockerhub.cwd.at/docker/powerdns:0-1
+    - name: dockerhub.cwd.at/docker/powerdns:0.3
       alias: powerdns
   before_script:
     - export COMPOSER_CACHE_DIR="$(pwd -P)/.composer-cache"
@@ -22,7 +22,7 @@ variables:
     #- vendor/bin/php-cs-fixer fix --dry-run --config=.php_cs
     #    - php -d zend.enable_gc=0 bin/phpunit -c ./phpunit.xml.dist --coverage-html=build/coverage --coverage-xml=build/logs/coverage --log-junit=build/logs/phpunit.xml --coverage-text --colors=never
     #- bin/behat --format=progress --verbose --stop-on-failure
-    - vendor/bin/phpunit --coverage-html build/coverage --log-junit=build/logs/phpunit.xml
+    - vendor/bin/phpunit --coverage-html build/coverage --exclude-group performance --log-junit=build/logs/phpunit.xml --coverage-text --colors=never
   stage: test
   cache:
     key: "${CI_PROJECT_PATH_SLUG}-cache"
