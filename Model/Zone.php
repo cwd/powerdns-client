@@ -160,7 +160,7 @@ class Zone
     /**
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -170,7 +170,7 @@ class Zone
      *
      * @return Zone
      */
-    public function setName(string $name): Zone
+    public function setName(?string $name): Zone
     {
         $this->name = $name;
 
@@ -180,7 +180,7 @@ class Zone
     /**
      * @return string
      */
-    public function getType(): string
+    public function getType(): ?string
     {
         return $this->type;
     }
@@ -190,7 +190,7 @@ class Zone
      *
      * @return Zone
      */
-    public function setType(string $type): Zone
+    public function setType(?string $type): Zone
     {
         $this->type = $type;
 
