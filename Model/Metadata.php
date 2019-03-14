@@ -57,10 +57,10 @@ class Metadata
      * @var string
      * @Assert\NotBlank(groups={"CREATE", "UPDATE"})
      */
-    private $kind;
+    protected $kind;
 
     /** @var string[] */
-    private $metadata = [];
+    protected $metadata = [];
 
     /**
      * @return string

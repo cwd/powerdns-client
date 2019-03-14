@@ -16,19 +16,19 @@ namespace Cwd\PowerDNSClient\Model;
 class Server
 {
     /** @var string */
-    private $type = 'Server';
+    protected $type = 'Server';
     /** @var string */
-    private $id;
+    protected $id;
     /** @var string */
-    private $daemonType;
+    protected $daemonType;
     /** @var string */
-    private $version;
+    protected $version;
     /** @var string */
-    private $url;
+    protected $url;
     /** @var string */
-    private $configUrl;
+    protected $configUrl;
     /** @var string */
-    private $zonesUrl;
+    protected $zonesUrl;
 
     /**
      * @return string

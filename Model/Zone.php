@@ -29,14 +29,14 @@ class Zone
      * @var string|null
      * @Groups({"CREATE", "DELETE"})
      */
-    private $id;
+    protected $id;
     /**
      * @var string
      * @Assert\NotBlank(groups={"CREATE"})
      * @DNSAssert\HasDotPostfix(groups={"CREATE"})
      * @Groups({"CREATE", "DELETE"})
      */
-    private $name;
+    protected $name;
     /**
      * @var string
      * @Assert\NotBlank()
@@ -46,13 +46,13 @@ class Zone
      * )
      * @Groups({"REPLACE", "CREATE", "DELETE"})
      */
-    private $type = self::TYPE;
+    protected $type = self::TYPE;
 
     /**
      * @var string|null
      * @Groups({"CREATE", "DELETE"})
      */
-    private $url;
+    protected $url;
     /**
      * @var string|null
      * @Assert\Choice(
@@ -61,81 +61,81 @@ class Zone
      * )
      * @Groups({"REPLACE", "CREATE", "DELETE"})
      */
-    private $kind;
+    protected $kind;
     /**
      * @var array
      * @Assert\Valid(groups={"CREATE", "UPDATE"})
      * @Groups({"REPLACE", "CREATE", "DELETE"})
      */
-    private $rrsets = [];
+    protected $rrsets = [];
 
     /** @var int|null */
-    private $serial;
+    protected $serial;
     /** @var int|null */
-    private $notifiedSerial;
+    protected $notifiedSerial;
     /**
      * @var string[]
      * @Groups({"REPLACE", "CREATE", "DELETE"})
      */
-    private $masters = [];
+    protected $masters = [];
     /**
      * @var bool
      * @Groups({"REPLACE", "CREATE", "DELETE"})
      */
-    private $dnssec = false;
+    protected $dnssec = false;
     /**
      * @var string|null
      * @Groups({"REPLACE", "CREATE", "DELETE"})
      */
-    private $nsec3param;
-
-    /**
-     * @var bool
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    private $nsec3narrow = false;
+    protected $nsec3param;
 
     /**
      * @var bool
      * @Groups({"REPLACE", "CREATE", "DELETE"})
      */
-    private $predisgned = false;
-
-    /**
-     * @var string|null
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    private $soaEdit;
-
-    /**
-     * @var string|null
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    private $soaEditApi;
+    protected $nsec3narrow = false;
 
     /**
      * @var bool
      * @Groups({"REPLACE", "CREATE", "DELETE"})
      */
-    private $apiRectify = false;
+    protected $predisgned = false;
 
     /**
      * @var string|null
      * @Groups({"REPLACE", "CREATE", "DELETE"})
      */
-    private $zone;
+    protected $soaEdit;
 
     /**
      * @var string|null
      * @Groups({"REPLACE", "CREATE", "DELETE"})
      */
-    private $account;
+    protected $soaEditApi;
+
+    /**
+     * @var bool
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
+    protected $apiRectify = false;
+
+    /**
+     * @var string|null
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
+    protected $zone;
+
+    /**
+     * @var string|null
+     * @Groups({"REPLACE", "CREATE", "DELETE"})
+     */
+    protected $account;
 
     /**
      * @var string[]
      * @Groups({"REPLACE", "CREATE", "DELETE"})
      */
-    private $nameservers = [];
+    protected $nameservers = [];
 
     /**
      * @return null|string

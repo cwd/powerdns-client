@@ -16,13 +16,13 @@ namespace Cwd\PowerDNSClient\Model;
 class Config
 {
     /** @var string|null */
-    private $type;
+    protected $type;
 
     /** @var string|null */
-    private $name;
+    protected $name;
 
     /** @var string|null */
-    private $value;
+    protected $value;
 
     /**
      * @return null|string

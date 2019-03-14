@@ -23,17 +23,17 @@ class Comment
      * @Assert\NotBlank(groups={"CREATE", "UPDATE"})
      * @Groups({"REPLACE", "CREATE"})
      */
-    private $content;
+    protected $content;
 
     /**
      * @var string
      * @Groups({"REPLACE", "CREATE"})
      * @Assert\NotBlank(groups={"CREATE", "UPDATE"})
      */
-    private $account;
+    protected $account;
 
     /** @var int */
-    private $modifiedAt;
+    protected $modifiedAt;
 
     /**
      * @return string
