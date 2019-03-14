@@ -30,7 +30,7 @@ class RRSet
      *
      * @Groups({"REPLACE", "CREATE", "DELETE"})
      */
-    private $name;
+    protected $name;
 
     /**
      * @var string
@@ -45,12 +45,12 @@ class RRSet
      * )
      * @Groups({"REPLACE", "CREATE", "DELETE"})
      */
-    private $type;
+    protected $type;
     /**
      * @var int
      * @Groups({"REPLACE", "CREATE"})
      */
-    private $ttl;
+    protected $ttl;
 
     /**
      * @var string
@@ -60,21 +60,21 @@ class RRSet
      * )
      * @Groups({"REPLACE", "DELETE"})
      */
-    private $changetype;
+    protected $changetype;
 
     /**
      * @var Record[]
      * @Assert\Valid(groups={"CREATE", "UPDATE"})
      * @Groups({"REPLACE", "CREATE"})
      */
-    private $records = [];
+    protected $records = [];
 
     /**
      * @var Comment[]
      * @Assert\Valid(groups={"CREATE", "UPDATE"})
      * @Groups({"REPLACE", "CREATE"})
      */
-    private $comments = [];
+    protected $comments = [];
 
     /**
      * @return string

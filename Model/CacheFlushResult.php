@@ -16,9 +16,9 @@ namespace Cwd\PowerDNSClient\Model;
 class CacheFlushResult
 {
     /** @var int */
-    private $count;
+    protected $count;
     /** @var string */
-    private $result;
+    protected $result;
 
     /**
      * @return int

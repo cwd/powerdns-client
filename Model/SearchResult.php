@@ -16,21 +16,21 @@ namespace Cwd\PowerDNSClient\Model;
 class SearchResult
 {
     /** @var string */
-    private $content;
+    protected $content;
     /** @var bool */
-    private $disabled = false;
+    protected $disabled = false;
     /** @var string */
-    private $name;
+    protected $name;
     /** @var string */
-    private $objectType;
+    protected $objectType;
     /** @var string */
-    private $zoneId;
+    protected $zoneId;
     /** @var string */
-    private $zone;
+    protected $zone;
     /** @var string */
-    private $type;
+    protected $type;
     /** @var int */
-    private $ttl;
+    protected $ttl;
 
     /**
      * @return string

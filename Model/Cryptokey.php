@@ -46,10 +46,10 @@ class Cryptokey
     ];
 
     /** @var string */
-    private $type = 'Cryptokey';
+    protected $type = 'Cryptokey';
 
     /** @var int */
-    private $id;
+    protected $id;
     /**
      * @var string
      * @Assert\Choice(
@@ -57,20 +57,20 @@ class Cryptokey
      *   groups={"CREATE"}
      * )
      */
-    private $keytype;
+    protected $keytype;
 
     /** @var bool */
-    private $active = false;
+    protected $active = false;
     /** @var string */
-    private $dnskey;
+    protected $dnskey;
     /** @var string[] */
-    private $ds = [];
+    protected $ds = [];
     /** @var string */
-    private $privatekey;
+    protected $protectedkey;
     /** @var string */
-    private $algorithm;
+    protected $algorithm;
     /** @var int */
-    private $bits;
+    protected $bits;
 
     /**
      * @return string
@@ -195,19 +195,19 @@ class Cryptokey
     /**
      * @return string
      */
-    public function getPrivatekey(): ?string
+    public function getprotectedkey(): ?string
     {
-        return $this->privatekey;
+        return $this->protectedkey;
     }
 
     /**
-     * @param string $privatekey
+     * @param string $protectedkey
      *
      * @return Cryptokey
      */
-    public function setPrivatekey(string $privatekey): Cryptokey
+    public function setprotectedkey(string $protectedkey): Cryptokey
     {
-        $this->privatekey = $privatekey;
+        $this->protectedkey = $protectedkey;
 
         return $this;
     }

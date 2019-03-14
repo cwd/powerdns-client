@@ -23,19 +23,19 @@ class Record
      * @Assert\NotBlank(groups={"CREATE", "UPDATE"})
      * @Groups({"REPLACE", "CREATE"})
      */
-    private $content;
+    protected $content;
 
     /**
      * @var bool
      * @Groups({"REPLACE", "CREATE", "DELETE"})
      */
-    private $disabled = false;
+    protected $disabled = false;
 
     /**
      * @var bool
      * @Groups({"REPLACE", "CREATE", "DELETE"})
      */
-    private $setPtr = false;
+    protected $setPtr = false;
 
     /**
      * @return string
