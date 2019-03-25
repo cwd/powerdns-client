@@ -35,7 +35,7 @@ class SearchResult
     /**
      * @return string
      */
-    public function getContent(): string
+    public function getContent(): ?string
     {
         return $this->content;
     }
@@ -75,7 +75,7 @@ class SearchResult
     /**
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -135,7 +135,7 @@ class SearchResult
     /**
      * @return string
      */
-    public function getZone(): string
+    public function getZone(): ?string
     {
         return $this->zone;
     }
@@ -155,7 +155,7 @@ class SearchResult
     /**
      * @return string
      */
-    public function getType(): string
+    public function getType(): ?string
     {
         return $this->type;
     }
@@ -175,7 +175,7 @@ class SearchResult
     /**
      * @return int
      */
-    public function getTtl(): int
+    public function getTtl(): ?int
     {
         return $this->ttl;
     }
