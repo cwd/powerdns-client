@@ -12,11 +12,13 @@ declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient;
 
+use Doctrine\Common\Annotations\Reader;
+
 class PowerDNSClientFactory
 {
-    static public function createClient(string $uri, string $apiKey, ?string $defaultServer = null): PowerDNSClient
+    static public function createClient(string $uri, string $apiKey, ?string $defaultServer = null, Reader $reader): PowerDNSClient
     {
-        $client = new Client($uri, $apiKey);
+        $client = new Client($uri, $apiKey, null, $reader);
         $pdns = new PowerDNSClient($client);
         if ($defaultServer !== null) {
             $pdns->setDefaultServerId($defaultServer);

@@ -8,3 +8,4 @@ services:
       - '%cwd_power_dns_client.uri%'
       - '%cwd_power_dns_client.api_key%'
       - '%cwd_power_dns_client.default_server%'
+      - '@annotation_reader'
