@@ -15,6 +15,7 @@ namespace Cwd\PowerDNSClient\Tests;
 
 use Cwd\PowerDNSClient\Client;
 use Cwd\PowerDNSClient\PowerDNSClient;
+use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
 
 abstract class AbstractTest extends TestCase
@@ -25,7 +26,7 @@ abstract class AbstractTest extends TestCase
     protected function getClient(): PowerDNSClient
     {
         if (null === $this->pdnsClient) {
-            $client = new Client('http://powerdns', 'b60dc02889d7eb66a81f2f513ba7449d');
+            $client = new Client('http://powerdns', 'b60dc02889d7eb66a81f2f513ba7449d', null, new AnnotationReader());
             $pdns = new PowerDNSClient($client);
             $pdns->setDefaultServerId('localhost');
 
