@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Cwd\PowerDNSClient;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\Reader;
 use GuzzleHttp\Psr7\Request;
 use Http\Discovery\HttpClientDiscovery;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
@@ -42,7 +43,7 @@ class Client
     /** @var Serializer */
     private $serializer;
 
-    public function __construct($apiHost, $apiKey, ?GuzzleClient $client = null)
+    public function __construct($apiHost, $apiKey, ?GuzzleClient $client = null, Reader $annotationReader)
     {
         $this->apiKey = $apiKey;
         $this->apiUri = sprintf('%s/%s', $apiHost, $this->basePath);
@@ -51,7 +52,7 @@ class Client
             $this->client = HttpClientDiscovery::find();
         }
 
-        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader($annotationReader));
         $discriminator = new ClassDiscriminatorFromClassMetadata($classMetadataFactory);
 
         $normalizer = new ObjectNormalizer($classMetadataFactory, new CamelCaseToSnakeCaseNameConverter(), new PropertyAccessor(), new ReflectionExtractor(), $discriminator);
