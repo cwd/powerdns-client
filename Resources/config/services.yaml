@@ -3,6 +3,7 @@ services:
     public: true
     arguments:
       - '%cwd_power_dns_client.clients%'
+      - '@annotation_reader'
 
   Cwd\PowerDNSClient\PowerDNSClient:
     public: true
