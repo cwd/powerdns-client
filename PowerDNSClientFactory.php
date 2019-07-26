@@ -41,7 +41,7 @@ class PowerDNSClientFactory
 
         foreach ($this->config as $configName => $config) {
             if ($name === $configName) {
-                $client = new Client($config['uri'], $config['api_key'], $this->reader);
+                $client = new Client($config['uri'], $config['api_key'], null, $this->reader);
                 $this->client[$name] = new PowerDNSClient($client);
 
                 return $this->client($name);
