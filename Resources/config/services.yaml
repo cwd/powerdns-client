@@ -1,5 +1,8 @@
 services:
-  Cwd\PowerDNSClient\PowerDNSClientFactory: ~
+  Cwd\PowerDNSClient\PowerDNSClientFactory:
+    public: true
+    arguments:
+      - '%cwd_power_dns_client.clients%'
 
   Cwd\PowerDNSClient\PowerDNSClient:
     public: true

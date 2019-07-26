@@ -16,6 +16,43 @@ use Doctrine\Common\Annotations\Reader;
 
 class PowerDNSClientFactory
 {
+    private $config = [];
+    /**
+     * @var array<string,PowerDNSClient>
+     */
+    private $clients = [];
+
+    public function __construct(array $config = [])
+    {
+        $this->config = $config;
+    }
+
+    public function getClient(string $name): PowerDNSClient
+    {
+        if (isset($this->clients[$name]) && $this->clients[$name] instanceof PowerDNSClient) {
+            return $this->client[$name];
+        }
+
+        foreach ($this->config as $configName => $config) {
+            if ($name === $configName) {
+                $client = new Client();
+                $this->client[$name] = new PowerDNSClient($client);
+
+                return $this->client($name);
+            }
+        }
+
+        throw new \RuntimeException(sprintf('No configuration for "%s% is found', $name));
+    }
+
+
+    /**
+     * @param string $uri
+     * @param string $apiKey
+     * @param string|null $defaultServer
+     * @param Reader $reader
+     * @return PowerDNSClient
+     */
     static public function createClient(string $uri, string $apiKey, ?string $defaultServer = null, Reader $reader): PowerDNSClient
     {
         $client = new Client($uri, $apiKey, null, $reader);
