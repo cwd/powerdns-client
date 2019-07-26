@@ -36,15 +36,15 @@ class PowerDNSClientFactory
     public function getClient(string $name): PowerDNSClient
     {
         if (isset($this->clients[$name]) && $this->clients[$name] instanceof PowerDNSClient) {
-            return $this->client[$name];
+            return $this->clients[$name];
         }
 
         foreach ($this->config as $configName => $config) {
             if ($name === $configName) {
                 $client = new Client($config['uri'], $config['api_key'], null, $this->reader);
-                $this->client[$name] = new PowerDNSClient($client);
+                $this->clients[$name] = new PowerDNSClient($client);
 
-                return $this->client($name);
+                return $this->clients[$name];
             }
         }
 
