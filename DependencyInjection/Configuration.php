@@ -30,17 +30,8 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('cwd_power_dns_client');
         $rootNode->children()
-            ->arrayNode('hosts')
-                ->beforeNormalization()->castToArray()->end()
-                ->arrayPrototype()
-                    ->children()
-                        ->scalarNode('name')->defaultValue('default')->end()
-                        ->scalarNode('uri')->defaultValue('http://localhost')->end()
-                        ->scalarNode('api_key')->defaultValue(null)->end()
-                        ->scalarNode('type')->defaultValue('master')->end()
-                        ->scalarNode('default_server')->defaultValue('localhost')->end()
-            ->end();
-        $rootNode->children()
+            ->variableNode('hosts')->defaultValue('[]')->end() // expected to be a json string!
+
             ->variableNode('uri')->defaultValue('http://localhost')->end()
             ->variableNode('api_key')->defaultValue(null)->end()
             ->variableNode('default_server')->defaultValue('localhost')->end()
