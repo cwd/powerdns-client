@@ -33,8 +33,8 @@ class PowerDNSClientFactory
             return $this->client[$name];
         }
 
-        foreach ($this->config as $configName => $config) {
-            if ($name === $configName) {
+        foreach ($this->config as $config) {
+            if (isset($config['name']) && $name === $config['name']) {
                 $client = new Client();
                 $this->client[$name] = new PowerDNSClient($client);
 
