@@ -27,6 +27,8 @@ class CwdPowerDNSClientExtension extends Extension
         $container->setParameter('cwd_power_dns_client.api_key', $config['api_key']);
         $container->setParameter('cwd_power_dns_client.default_server', $config['default_server']);
 
+        $container->setParameter('cwd_power_dns_client.clients', $config['hosts']);
+
         $loader = new YamlFileLoader(
             $container,
             new FileLocator(__DIR__.'/../Resources/config')
