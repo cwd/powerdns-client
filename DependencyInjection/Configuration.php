@@ -30,6 +30,8 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('cwd_power_dns_client');
         $rootNode->children()
+            ->variableNode('hosts')->defaultValue([])->end()
+
             ->variableNode('uri')->defaultValue('http://localhost')->end()
             ->variableNode('api_key')->defaultValue(null)->end()
             ->variableNode('default_server')->defaultValue('localhost')->end()
