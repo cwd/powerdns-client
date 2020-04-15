@@ -7,7 +7,7 @@ services:
 
   Cwd\PowerDNSClient\PowerDNSClient:
     public: true
-    factory:   'Cwd\PowerDNSClient\PowerDNSClientFactory:createClient'
+    factory:   ['Cwd\PowerDNSClient\PowerDNSClientFactory', 'createClient']
     arguments:
       - '%cwd_power_dns_client.uri%'
       - '%cwd_power_dns_client.api_key%'

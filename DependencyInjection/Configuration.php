@@ -27,8 +27,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('cwd_power_dns_client');
+        $treeBuilder = new TreeBuilder('cwd_power_dns_client');
+        $rootNode = $treeBuilder->getRootNode();
         $rootNode->children()
             ->variableNode('hosts')->defaultValue([])->end()
 
