@@ -470,8 +470,7 @@ class ZonesEndpointTest extends AbstractTest
     public function testExportZone(Zone $zone)
     {
         $result = $this->getClient()->zones()->export($zone);
-        $this->assertEmpty($result);
-        $this->markAsRisky();
+        $this->assertNotEmpty($result);
     }
 
     /**

@@ -30,9 +30,9 @@ variables:
     - .composer-cache
     policy: pull-push
 
-test:php7.1:
+test:php7.3:
   <<: *php_definition
-  image: dockerhub.cwd.at/docker/php/cli-xdebug:7.1
+  image: dockerhub.cwd.at/docker/php/cli-xdebug:7.3
   artifacts:
     name: coverage
     paths:
@@ -44,21 +44,9 @@ test:php7.1:
   tags:
     - autoscale
 
-test:php7.2:
+test:php7.4:
   <<: *php_definition
-  image: dockerhub.cwd.at/docker/php/cli-xdebug:7.2
-  cache:
-    policy: pull
-  tags:
-    - autoscale
-
-test:php7.3:
-  <<: *php_definition
-  before_script:
-    - export COMPOSER_CACHE_DIR="$(pwd -P)/.composer-cache"
-    #- mkdir -p build/api build/coverage build/logs
-    - composer install --prefer-dist --ansi --no-progress --no-suggest --ignore-platform-reqs
-  image: dockerhub.cwd.at/docker/php/cli-xdebug:7.3
+  image: dockerhub.cwd.at/docker/php/cli-xdebug:7.4
   cache:
     policy: pull
   tags:
