@@ -72,7 +72,7 @@ class Client
      *
      * @return mixed
      */
-    public function call($payload = null, $uri, $hydrationClass = null, $isList = false, $method = 'GET', array $queryParams = [])
+    public function call($payload = null, $uri, $hydrationClass = null, $isList = false, $method = 'GET', array $queryParams = [], $isJson = true)
     {
         $uri = rtrim(sprintf('%s/%s', $this->apiUri, $uri), '/');
 
@@ -86,9 +86,14 @@ class Client
         ], $payload);
 
         $response = $this->client->sendRequest($request);
-
         $responseBody = $response->getBody()->getContents();
+
+        if (!$isJson) {
+            return $responseBody;
+        }
+
         $responseData = json_decode($responseBody);
+
 
         if ($response->getStatusCode() >= 300 && isset($responseData->error)) {
             throw new \LogicException(sprintf('Error on %s request %s: %s', $method, $uri, $responseData->error));
