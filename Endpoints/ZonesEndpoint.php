@@ -187,7 +187,7 @@ class ZonesEndpoint extends AbstractEndpoint
             $zoneId = $zoneId->getId();
         }
 
-        return $this->getClient()->call(null, sprintf(self::ENDPOINT_ELEMENT, $this->defaultServerId, $zoneId).'/export', null, false, 'GET');
+        return $this->getClient()->call(null, sprintf(self::ENDPOINT_ELEMENT, $this->defaultServerId, $zoneId).'/export', null, false, 'GET', [], false);
     }
 
     /**
