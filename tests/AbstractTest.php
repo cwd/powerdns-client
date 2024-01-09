@@ -15,7 +15,6 @@ namespace Cwd\PowerDNSClient\Tests;
 
 use Cwd\PowerDNSClient\Client;
 use Cwd\PowerDNSClient\PowerDNSClient;
-use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
 
 abstract class AbstractTest extends TestCase

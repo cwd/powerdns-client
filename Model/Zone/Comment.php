@@ -3,7 +3,7 @@
 /*
  * This file is part of the CwdPowerDNS Client
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * (c) 2024 cwd.at GmbH <office@cwd.at>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -19,11 +19,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Comment
 {
     #[Groups(['REPLACE', 'CREATE'])]
-    #[Assert\NotBlank(groups: ["CREATE", "UPDATE"])]
+    #[Assert\NotBlank(groups: ['CREATE', 'UPDATE'])]
     protected ?string $content = null;
 
     #[Groups(['REPLACE', 'CREATE'])]
-    #[Assert\NotBlank(groups: ["CREATE", "UPDATE"])]
+    #[Assert\NotBlank(groups: ['CREATE', 'UPDATE'])]
     protected ?string $account = null;
 
     protected ?int $modifiedAt = null;

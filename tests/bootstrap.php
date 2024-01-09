@@ -22,4 +22,5 @@ declare(strict_types=1);
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 
 $loader = require __DIR__.'/../vendor/autoload.php';
+
 return $loader;

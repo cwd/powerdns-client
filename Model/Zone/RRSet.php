@@ -3,7 +3,7 @@
 /*
  * This file is part of the CwdPowerDNS Client
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * (c) 2024 cwd.at GmbH <office@cwd.at>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient\Model\Zone;
 
+use Cwd\PowerDNSClient\Validator\Constraints as DNSAssert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Cwd\PowerDNSClient\Validator\Constraints as DNSAssert;
 
 class RRSet
 {
@@ -31,7 +31,7 @@ class RRSet
     #[Assert\Choice(groups: ['CREATE', 'UPDATE'], choices: [
      'A', 'AAAA', 'AFSDB', 'ALIAS', 'CAA', 'CERT', 'CDNSKEY', 'CDS', 'CNAME', 'DNSKEY', 'DNAME', 'DS', 'HINFO',
      'KEY', 'LOC', 'MX', 'NAPTR', 'NS', 'NSEC, NSEC3, NSEC3PARAM', 'OPENPGPKEY', 'PTR', 'RP', 'RRSIG', 'SOA',
-     'SPF', 'SSHFP', 'SRV', 'TKEY, TSIG', 'TLSA', 'SMIMEA', 'TXT', 'URI'
+     'SPF', 'SSHFP', 'SRV', 'TKEY, TSIG', 'TLSA', 'SMIMEA', 'TXT', 'URI',
     ])]
     #[Assert\NotBlank(groups: ['CREATE', 'UPDATE'])]
     #[Groups(['REPLACE', 'CREATE', 'DELETE'])]

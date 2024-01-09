@@ -3,7 +3,7 @@
 /*
  * This file is part of the CwdPowerDNS Client
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * (c) 2024 cwd.at GmbH <office@cwd.at>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,11 +15,9 @@ namespace Cwd\PowerDNSClient\Model;
 
 class CacheFlushResult
 {
-
     protected int $count;
 
     protected string $result;
-
 
     public function getCount(): int
     {

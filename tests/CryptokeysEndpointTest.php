@@ -52,7 +52,6 @@ class CryptokeysEndpointTest extends AbstractTest
 
         $zone = $this->getClient()->zones()->create($zone, true);
         $this->assertNotEmpty($zone->getId());
-
     }
 
     public function tearDown(): void

@@ -202,7 +202,6 @@ class ZonesEndpointTest extends AbstractTest
                     $record->setContent('127.0.0.2');
                     $recordSet->setChangetype(Zone\RRSet::TYPE_REPLACE);
                 }
-
             }
         }
 
@@ -227,12 +226,12 @@ class ZonesEndpointTest extends AbstractTest
                 $record = current($rrset->getRecords());
                 $this->assertEquals('127.0.0.2', $record->getContent());
             } elseif ('www.example.com.' == $rrset->getName()) {
-                //@ToDo FIX THIS CASE
+                // @ToDo FIX THIS CASE
                 $foundWWW = true;
-                #$this->assertEquals(1, count($rrset->getRecords()));
-                #/** @var Record $record */
-                #$record = current($rrset->getRecords());
-                #$this->assertEquals('127.0.0.2', $record->getContent());
+            // $this->assertEquals(1, count($rrset->getRecords()));
+            // /** @var Record $record */
+            // $record = current($rrset->getRecords());
+            // $this->assertEquals('127.0.0.2', $record->getContent());
             } elseif ('delete.example.com.' == $rrset->getName()) {
                 $this->fail('delete.example.com. not deleted!');
             }
@@ -262,10 +261,10 @@ class ZonesEndpointTest extends AbstractTest
                 $recordSet->setChangetype(Zone\RRSet::TYPE_DELETE);
             } elseif ('www.example.com.' == $recordSet->getName()) {
                 // @TODO FIX THIS
-                #/** @var Zone\Record $record */
-                #$record = current($recordSet->getRecords());
-                #$record->setContent('127.0.0.2');
-                #$recordSet->setChangetype(Zone\RRSet::TYPE_REPLACE);
+                // /** @var Zone\Record $record */
+                // $record = current($recordSet->getRecords());
+                // $record->setContent('127.0.0.2');
+                // $recordSet->setChangetype(Zone\RRSet::TYPE_REPLACE);
             }
         }
 
@@ -290,10 +289,10 @@ class ZonesEndpointTest extends AbstractTest
                 $this->assertEquals('127.0.0.2', $record->getContent());
             } elseif ('www.example.com.' == $rrset->getName()) {
                 $foundWWW = true;
-                #$this->assertEquals(1, count($rrset->getRecords()));
-                #/** @var Record $record */
-                #$record = current($rrset->getRecords());
-                #$this->assertEquals('127.0.0.2', $record->getContent());
+            // $this->assertEquals(1, count($rrset->getRecords()));
+            // /** @var Record $record */
+            // $record = current($rrset->getRecords());
+            // $this->assertEquals('127.0.0.2', $record->getContent());
             } elseif ('delete.example.com.' == $rrset->getName()) {
                 $this->fail('delete.example.com. not deleted!');
             }
@@ -373,8 +372,6 @@ class ZonesEndpointTest extends AbstractTest
             $this->fail('www3.example.com. not found');
         }
     }
-
-
 
     public function testCreateExisting()
     {

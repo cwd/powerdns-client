@@ -3,7 +3,7 @@
 /*
  * This file is part of the CwdPowerDNS Client
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * (c) 2024 cwd.at GmbH <office@cwd.at>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,7 +15,6 @@ namespace Cwd\PowerDNSClient\Model;
 
 class SearchResult
 {
-
     protected ?string $content = null;
     protected bool $disabled = false;
     protected ?string $name = null;
@@ -24,7 +23,6 @@ class SearchResult
     protected ?string $zone = null;
     protected ?string $type = null;
     protected ?int $ttl = null;
-
 
     public function getContent(): ?string
     {
@@ -38,7 +36,6 @@ class SearchResult
         return $this;
     }
 
-
     public function isDisabled(): bool
     {
         return $this->disabled;
@@ -51,7 +48,6 @@ class SearchResult
         return $this;
     }
 
-
     public function getName(): ?string
     {
         return $this->name;
@@ -63,7 +59,6 @@ class SearchResult
 
         return $this;
     }
-
 
     public function getObjectType(): string
     {
