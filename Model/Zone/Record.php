@@ -18,38 +18,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Record
 {
-    /**
-     * @var string
-     * @Assert\NotBlank(groups={"CREATE", "UPDATE"})
-     * @Groups({"REPLACE", "CREATE"})
-     */
-    protected $content;
+    #[Groups(['REPLACE', 'CREATE'])]
+    #[Assert\NotBlank(groups: ["CREATE", "UPDATE"])]
+    protected ?string $content = null;
 
-    /**
-     * @var bool
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $disabled = false;
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    protected bool $disabled = false;
 
-    /**
-     * @var bool
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $setPtr = false;
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    protected bool $setPtr = false;
 
-    /**
-     * @return string
-     */
     public function getContent(): string
     {
         return $this->content;
     }
 
-    /**
-     * @param string $content
-     *
-     * @return Record
-     */
     public function setContent(string $content): Record
     {
         $this->content = $content;
@@ -57,19 +40,11 @@ class Record
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isDisabled(): bool
     {
         return $this->disabled;
     }
 
-    /**
-     * @param bool $disabled
-     *
-     * @return Record
-     */
     public function setDisabled(bool $disabled): Record
     {
         $this->disabled = $disabled;
@@ -77,20 +52,12 @@ class Record
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSetPtr()
+    public function getSetPtr(): bool
     {
         return $this->setPtr;
     }
 
-    /**
-     * @param mixed $setPtr
-     *
-     * @return Record
-     */
-    public function setSetPtr($setPtr): Record
+    public function setSetPtr(bool $setPtr): Record
     {
         $this->setPtr = $setPtr;
 

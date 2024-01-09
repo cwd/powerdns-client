@@ -45,46 +45,23 @@ class Cryptokey
         16 => 'ED448',
     ];
 
-    /** @var string */
-    protected $type = 'Cryptokey';
+    protected string $type = 'Cryptokey';
+    protected ?int $id = null;
 
-    /** @var int */
-    protected $id;
-    /**
-     * @var string
-     * @Assert\Choice(
-     *   choices = {"ksk", "zsk", "csk"},
-     *   groups={"CREATE"}
-     * )
-     */
-    protected $keytype;
+    #[Assert\Choice(groups: ['CREATE'], choices: ['ksk', 'zsk', 'csk'])]
+    protected ?string $keytype = null;
+    protected bool $active = false;
+    protected ?string $dnskey = null;
+    protected array $ds = [];
+    protected ?string $protectedkey = null;
+    protected mixed $algorithm = null;
+    protected ?int $bits = null;
 
-    /** @var bool */
-    protected $active = false;
-    /** @var string */
-    protected $dnskey;
-    /** @var string[] */
-    protected $ds = [];
-    /** @var string */
-    protected $protectedkey;
-    /** @var string */
-    protected $algorithm;
-    /** @var int */
-    protected $bits;
-
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     *
-     * @return Cryptokey
-     */
     public function setType(string $type): Cryptokey
     {
         $this->type = $type;
@@ -92,19 +69,11 @@ class Cryptokey
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Cryptokey
-     */
     public function setId(int $id): Cryptokey
     {
         $this->id = $id;
@@ -112,19 +81,11 @@ class Cryptokey
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getKeytype(): ?string
     {
         return $this->keytype;
     }
 
-    /**
-     * @param string $keytype
-     *
-     * @return Cryptokey
-     */
     public function setKeytype(string $keytype): Cryptokey
     {
         $this->keytype = $keytype;
@@ -132,19 +93,11 @@ class Cryptokey
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isActive(): bool
     {
         return $this->active;
     }
 
-    /**
-     * @param bool $active
-     *
-     * @return Cryptokey
-     */
     public function setActive(bool $active): Cryptokey
     {
         $this->active = $active;
@@ -152,19 +105,11 @@ class Cryptokey
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDnskey(): ?string
     {
         return $this->dnskey;
     }
 
-    /**
-     * @param string $dnskey
-     *
-     * @return Cryptokey
-     */
     public function setDnskey(string $dnskey): Cryptokey
     {
         $this->dnskey = $dnskey;
@@ -180,11 +125,6 @@ class Cryptokey
         return $this->ds;
     }
 
-    /**
-     * @param string[] $ds
-     *
-     * @return Cryptokey
-     */
     public function setDs(array $ds): Cryptokey
     {
         $this->ds = $ds;
@@ -192,19 +132,11 @@ class Cryptokey
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getprotectedkey(): ?string
     {
         return $this->protectedkey;
     }
 
-    /**
-     * @param string $protectedkey
-     *
-     * @return Cryptokey
-     */
     public function setprotectedkey(string $protectedkey): Cryptokey
     {
         $this->protectedkey = $protectedkey;
@@ -212,39 +144,23 @@ class Cryptokey
         return $this;
     }
 
-    /**
-     * @return string|int|null
-     */
-    public function getAlgorithm()
+    public function getAlgorithm(): string|int|null
     {
         return $this->algorithm;
     }
 
-    /**
-     * @param string|int $algorithm
-     *
-     * @return Cryptokey
-     */
-    public function setAlgorithm($algorithm): Cryptokey
+    public function setAlgorithm(string|int|null $algorithm): Cryptokey
     {
         $this->algorithm = $algorithm;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getBits(): ?int
     {
         return $this->bits;
     }
 
-    /**
-     * @param int $bits
-     *
-     * @return Cryptokey
-     */
     public function setBits(int $bits): Cryptokey
     {
         $this->bits = $bits;
@@ -257,8 +173,6 @@ class Cryptokey
      * by merging the flags, protocol, algorithm, and the base64-decoded key data
      * https://github.com/operasoftware/dns-ui/commit/35821799f7c2a2e17e9178612e24147dfe7c0867#diff-0d3376b053b1313ed26a84a0c61ef0f2R344
      * by Thomas Pike.
-     *
-     * @return string
      */
     public function getTag(): ?int
     {
@@ -281,11 +195,7 @@ class Cryptokey
         return $ac & 0xFFFF;
     }
 
-    /**
-     * @param ExecutionContextInterface $context
-     * @param $payload
-     * @Assert\Callback(groups={"CREATE"})
-     */
+    #[Assert\Callback(groups: ['CREATE'])]
     public function validateAlgos(ExecutionContextInterface $context, $payload): void
     {
         if (null === $this->getAlgorithm()) {

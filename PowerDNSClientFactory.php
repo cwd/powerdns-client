@@ -1,8 +1,9 @@
 <?php
+
 /*
- * This file is part of the Cwd PowerDNS Client
+ * This file is part of the CwdPowerDNS Client
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * (c) 2024 cwd.at GmbH <office@cwd.at>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -19,8 +20,8 @@ class PowerDNSClientFactory
     private $config = [];
     private $reader;
 
-    const SLAVE = 'slave';
-    const MASTER = 'master';
+    public const SLAVE = 'slave';
+    public const MASTER = 'master';
 
     /**
      * @var array<string,PowerDNSClient>
@@ -59,7 +60,7 @@ class PowerDNSClientFactory
         $clients = [];
 
         foreach ($this->config as $configName => $config) {
-            if (isset($config['type']) && $config['type'] == self::SLAVE) {
+            if (isset($config['type']) && self::SLAVE == $config['type']) {
                 $clients[] = $this->getClient($configName);
             }
         }
@@ -67,19 +68,11 @@ class PowerDNSClientFactory
         return $clients;
     }
 
-
-    /**
-     * @param string $uri
-     * @param string $apiKey
-     * @param string|null $defaultServer
-     * @param Reader $reader
-     * @return PowerDNSClient
-     */
-    static public function createClient(string $uri, string $apiKey, ?string $defaultServer = null, Reader $reader): PowerDNSClient
+    public static function createClient(string $uri, string $apiKey, string $defaultServer = null, Reader $reader): PowerDNSClient
     {
         $client = new Client($uri, $apiKey, null, $reader);
         $pdns = new PowerDNSClient($client);
-        if ($defaultServer !== null) {
+        if (null !== $defaultServer) {
             $pdns->setDefaultServerId($defaultServer);
         }
 

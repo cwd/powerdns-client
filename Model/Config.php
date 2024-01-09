@@ -15,28 +15,18 @@ namespace Cwd\PowerDNSClient\Model;
 
 class Config
 {
-    /** @var string|null */
-    protected $type;
 
-    /** @var string|null */
-    protected $name;
+    protected ?string $type = null;
 
-    /** @var string|null */
-    protected $value;
+    protected ?string $name = null;
 
-    /**
-     * @return null|string
-     */
+    protected ?string $value = null;
+
     public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * @param null|string $type
-     *
-     * @return Config
-     */
     public function setType(?string $type): Config
     {
         $this->type = $type;
@@ -44,19 +34,11 @@ class Config
         return $this;
     }
 
-    /**
-     * @return null|string
-     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param null|string $name
-     *
-     * @return Config
-     */
     public function setName(?string $name): Config
     {
         $this->name = $name;
@@ -64,19 +46,11 @@ class Config
         return $this;
     }
 
-    /**
-     * @return null|string
-     */
     public function getValue(): ?string
     {
         return $this->value;
     }
 
-    /**
-     * @param null|string $value
-     *
-     * @return Config
-     */
     public function setValue(?string $value): Config
     {
         $this->value = $value;

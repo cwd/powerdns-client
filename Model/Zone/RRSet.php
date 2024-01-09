@@ -23,132 +23,76 @@ class RRSet
     public const TYPE_DELETE = 'DELETE';
     public const TYPE_CREATE = 'REPLACE'; // Yes this is by design!
 
-    /**
-     * @var string
-     * @Assert\NotBlank(groups={"CREATE", "UPDATE"})
-     * @DNSAssert\HasDotPostfix(groups={"CREATE", "UPDATE"})
-     *
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $name;
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    #[Assert\NotBlank(groups: ['CREATE', 'UPDATE'])]
+    #[DNSAssert\HasDotPostfix(groups: ['CREATE', 'UPDATE'])]
+    protected ?string $name = null;
 
-    /**
-     * @var string
-     * @Assert\NotBlank(groups={"CREATE", "UPDATE"})
-     * @Assert\Choice(
-     *    groups={"CREATE", "UPDATE"},
-     *    choices={
-     *     "A", "AAAA", "AFSDB", "ALIAS", "CAA", "CERT", "CDNSKEY", "CDS", "CNAME", "DNSKEY", "DNAME", "DS", "HINFO",
-     *     "KEY", "LOC", "MX", "NAPTR", "NS", "NSEC, NSEC3, NSEC3PARAM", "OPENPGPKEY", "PTR", "RP", "RRSIG", "SOA",
-     *     "SPF", "SSHFP", "SRV", "TKEY, TSIG", "TLSA", "SMIMEA", "TXT", "URI"
-     *    }
-     * )
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $type;
-    /**
-     * @var int
-     * @Groups({"REPLACE", "CREATE"})
-     */
-    protected $ttl;
+    #[Assert\Choice(groups: ['CREATE', 'UPDATE'], choices: [
+     'A', 'AAAA', 'AFSDB', 'ALIAS', 'CAA', 'CERT', 'CDNSKEY', 'CDS', 'CNAME', 'DNSKEY', 'DNAME', 'DS', 'HINFO',
+     'KEY', 'LOC', 'MX', 'NAPTR', 'NS', 'NSEC, NSEC3, NSEC3PARAM', 'OPENPGPKEY', 'PTR', 'RP', 'RRSIG', 'SOA',
+     'SPF', 'SSHFP', 'SRV', 'TKEY, TSIG', 'TLSA', 'SMIMEA', 'TXT', 'URI'
+    ])]
+    #[Assert\NotBlank(groups: ['CREATE', 'UPDATE'])]
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    protected ?string $type = null;
 
-    /**
-     * @var string
-     * @Assert\Choice(
-     *    choices={"REPLACE", "DELETE", "CREATE"},
-     *    groups={"CREATE", "UPDATE"}
-     * )
-     * @Groups({"REPLACE", "DELETE"})
-     */
-    protected $changetype;
+    #[Groups(['REPLACE', 'CREATE'])]
+    protected ?int $ttl = null;
 
-    /**
-     * @var Record[]
-     * @Assert\Valid(groups={"CREATE", "UPDATE"})
-     * @Groups({"REPLACE", "CREATE"})
-     */
-    protected $records = [];
+    #[Assert\Choice(groups: ['CREATE', 'UPDATE'], choices: ['REPLACE', 'DELETE', 'CREATE'])]
+    #[Groups(['REPLACE', 'DELETE'])]
+    protected ?string $changetype = null;
 
-    /**
-     * @var Comment[]
-     * @Assert\Valid(groups={"CREATE", "UPDATE"})
-     * @Groups({"REPLACE", "CREATE"})
-     */
-    protected $comments = [];
+    #[Assert\Valid(groups: ['CREATE', 'UPDATE'])]
+    #[Groups(['REPLACE', 'DELETE'])]
+    protected array $records = [];
 
-    /**
-     * @return string
-     */
-    public function getName(): string
+    #[Assert\Valid(groups: ['CREATE', 'UPDATE'])]
+    #[Groups(['REPLACE', 'CREATE'])]
+    protected array $comments = [];
+
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return RRSet
-     */
-    public function setName(string $name): RRSet
+    public function setName(?string $name): RRSet
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getType(): string
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     *
-     * @return RRSet
-     */
-    public function setType(string $type): RRSet
+    public function setType(?string $type): RRSet
     {
         $this->type = $type;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getTtl(): int
+    public function getTtl(): ?int
     {
         return $this->ttl;
     }
 
-    /**
-     * @param int $ttl
-     *
-     * @return RRSet
-     */
-    public function setTtl(int $ttl): RRSet
+    public function setTtl(?int $ttl): RRSet
     {
         $this->ttl = $ttl;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getChangetype(): ?string
     {
         return $this->changetype;
     }
 
-    /**
-     * @param string $changetype
-     *
-     * @return RRSet
-     */
     public function setChangetype(?string $changetype): RRSet
     {
         $this->changetype = $changetype;
@@ -156,9 +100,6 @@ class RRSet
         return $this;
     }
 
-    /**
-     * @return Record[]
-     */
     public function getRecords(): array
     {
         return $this->records;
@@ -166,8 +107,6 @@ class RRSet
 
     /**
      * @param Record[] $records
-     *
-     * @return RRSet
      */
     public function setRecords(array $records): RRSet
     {
@@ -193,8 +132,6 @@ class RRSet
 
     /**
      * @param Comment[] $comments
-     *
-     * @return RRSet
      */
     public function setComments(array $comments): RRSet
     {

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Cwd\PowerDNSClient\Model;
 
 use Cwd\PowerDNSClient\Model\Zone\RRSet;
+use Cwd\PowerDNSClient\Model\Zone\ZoneKind;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Cwd\PowerDNSClient\Validator\Constraints as DNSAssert;
@@ -21,135 +22,78 @@ use Cwd\PowerDNSClient\Validator\Constraints as DNSAssert;
 class Zone
 {
     protected const TYPE = 'Zone';
+    /** @deprecated - Use ZoneKind::class Enum */
     public const KIND_MASTER = 'Master';
+    /** @deprecated - Use ZoneKind::class Enum */
     public const KIND_SLAVE = 'Slave';
+    /** @deprecated - Use ZoneKind::class Enum */
     public const KIND_NATIVE = 'Native';
 
-    /**
-     * @var string|null
-     * @Groups({"CREATE", "DELETE"})
-     */
-    protected $id;
-    /**
-     * @var string
-     * @Assert\NotBlank(groups={"CREATE"})
-     * @DNSAssert\HasDotPostfix(groups={"CREATE"})
-     * @Groups({"CREATE", "DELETE"})
-     */
-    protected $name;
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     * @Assert\Choice(
-     *    choices= {"Zone"},
-     *    groups={"CREATE", "UPDATE"}
-     * )
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $type = self::TYPE;
+    #[Groups(['CREATE', 'DELETE'])]
+    protected ?string $id = null;
 
-    /**
-     * @var string|null
-     * @Groups({"CREATE", "DELETE"})
-     */
-    protected $url;
-    /**
-     * @var string|null
-     * @Assert\Choice(
-     *   choices = {"Master", "Slave", "Native"},
-     *   groups={"CREATE", "UPDATE"}
-     * )
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $kind;
-    /**
-     * @var array
-     * @Assert\Valid(groups={"CREATE", "UPDATE"})
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $rrsets = [];
+    #[Groups(['CREATE', 'DELETE'])]
+    #[DNSAssert\HasDotPostfix(groups: ['CREATE'])]
+    #[Assert\NotBlank(groups: ['CREATE'])]
+    protected ?string $name = null;
 
-    /** @var int|null */
-    protected $serial;
-    /** @var int|null */
-    protected $notifiedSerial;
-    /**
-     * @var string[]
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $masters = [];
-    /**
-     * @var bool
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $dnssec = false;
-    /**
-     * @var string|null
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $nsec3param;
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    #[Assert\NotBlank]
+    #[Assert\Choice(groups: ['CREATE', 'UPDATE'], choices: ['Zone'])]
+    protected string $type = self::TYPE;
 
-    /**
-     * @var bool
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $nsec3narrow = false;
+    #[Groups('CREATE', 'DELETE')]
+    protected ?string $url = null;
 
-    /**
-     * @var bool
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $predisgned = false;
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    #[Assert\Type(groups: ['CREATE', 'UPDATE'], type: ZoneKind::class)]
+    protected ?ZoneKind $kind = null;
 
-    /**
-     * @var string|null
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $soaEdit;
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    #[Assert\Valid(groups: ['CREATE', 'UPDATE'])]
+    protected array $rrsets = [];
 
-    /**
-     * @var string|null
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $soaEditApi;
+    protected ?int $serial = null;
+    protected ?int $notifiedSerial = null;
 
-    /**
-     * @var bool
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $apiRectify = false;
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    protected array $masters = [];
 
-    /**
-     * @var string|null
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $zone;
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    protected bool $dnssec = false;
 
-    /**
-     * @var string|null
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $account;
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    protected ?string $nsec3param = null;
 
-    /**
-     * @var string[]
-     * @Groups({"REPLACE", "CREATE", "DELETE"})
-     */
-    protected $nameservers = [];
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    protected bool $nsec3narrow = false;
 
-    /**
-     * @return null|string
-     */
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    protected bool $predisgned = false;
+
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    protected ?string $soaEdit = null;
+
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    protected ?string $soaEditApi = null;
+
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    protected bool $apiRectify = false;
+
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    protected ?string $zone = null;
+
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    protected ?string $account;
+
+    #[Groups(['REPLACE', 'CREATE', 'DELETE'])]
+    protected array $nameservers = [];
+
     public function getId(): ?string
     {
         return $this->id;
     }
 
-    /**
-     * @param null|string $id
-     *
-     * @return Zone
-     */
     public function setId(?string $id): Zone
     {
         $this->id = $id;
@@ -157,19 +101,11 @@ class Zone
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return Zone
-     */
     public function setName(?string $name): Zone
     {
         $this->name = $name;
@@ -220,7 +156,7 @@ class Zone
     /**
      * @return null|string
      */
-    public function getKind(): ?string
+    public function getKind(): ?ZoneKind
     {
         return $this->kind;
     }
@@ -230,7 +166,7 @@ class Zone
      *
      * @return Zone
      */
-    public function setKind(?string $kind): Zone
+    public function setKind(?ZoneKind $kind): Zone
     {
         $this->kind = $kind;
 

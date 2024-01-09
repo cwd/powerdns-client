@@ -3,7 +3,7 @@
 /*
  * This file is part of the CwdPowerDNS Client
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * (c) 2024 cwd.at GmbH <office@cwd.at>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -22,13 +22,9 @@ class ServersEndpoint extends AbstractEndpoint
     private const ENDPOINT = 'servers/%s';
 
     /**
-     * @param null|string $serverId
-     *
-     * @return Server
-     *
      * @throws \Http\Client\Exception
      */
-    public function get(?string $serverId = null): Server
+    public function get(string $serverId = null): Server
     {
         if (null === $serverId) {
             $serverId = $this->defaultServerId;
@@ -48,8 +44,6 @@ class ServersEndpoint extends AbstractEndpoint
     }
 
     /**
-     * @return array
-     *
      * @throws \Http\Client\Exception
      */
     public function statistics(): array

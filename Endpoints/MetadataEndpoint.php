@@ -3,7 +3,7 @@
 /*
  * This file is part of the CwdPowerDNS Client
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * (c) 2024 cwd.at GmbH <office@cwd.at>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -46,11 +46,6 @@ class MetadataEndpoint extends AbstractEndpoint
     }
 
     /**
-     * @param string $kind
-     * @param string $hydrationClass
-     *
-     * @return Metadata
-     *
      * @throws \Http\Client\Exception
      */
     public function get(string $kind, string $hydrationClass = Metadata::class): ?Metadata
@@ -59,11 +54,8 @@ class MetadataEndpoint extends AbstractEndpoint
     }
 
     /**
-     * @param Metadata $metadata
-     * @param bool     $lacyLoad
-     * @param string   $hydrationClass
-     *
-     * @return Metadata|null
+     * @param bool   $lacyLoad
+     * @param string $hydrationClass
      *
      * @throws \Http\Client\Exception
      */
@@ -83,11 +75,7 @@ class MetadataEndpoint extends AbstractEndpoint
     }
 
     /**
-     * @param Metadata $metadata
-     * @param bool     $lacyLoad
-     * @param string   $hydrationClass
-     *
-     * @return Metadata|null
+     * @param bool $lacyLoad
      *
      * @throws \Http\Client\Exception
      */

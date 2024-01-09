@@ -3,7 +3,7 @@
 /*
  * This file is part of the CwdPowerDNS Client
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * (c) 2024 cwd.at GmbH <office@cwd.at>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,13 +21,13 @@ use Webmozart\Assert\Assert;
 
 class ServersEndpointTest extends AbstractTest
 {
-    const ZONE = 'metadata.net.';
+    public const ZONE = 'metadata.net.';
 
-    public function setup()
+    public function setup(): void
     {
         $zone = (new Zone())
             ->setName(self::ZONE)
-            ->setKind(Zone::KIND_MASTER)
+            ->setKind(Zone\ZoneKind::MASTER)
             ->addRrset(
                 (new Zone\RRSet())->setName('www.'.self::ZONE)
                     ->setType('A')
@@ -54,11 +54,9 @@ class ServersEndpointTest extends AbstractTest
 
         $zone = $this->getClient()->zones()->create($zone, true);
         $this->assertNotEmpty($zone->getId());
-
-        return $zone;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->getClient()->zones()->delete(self::ZONE);
     }

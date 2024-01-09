@@ -15,24 +15,17 @@ namespace Cwd\PowerDNSClient\Model;
 
 class CacheFlushResult
 {
-    /** @var int */
-    protected $count;
-    /** @var string */
-    protected $result;
 
-    /**
-     * @return int
-     */
+    protected int $count;
+
+    protected string $result;
+
+
     public function getCount(): int
     {
         return $this->count;
     }
 
-    /**
-     * @param int $count
-     *
-     * @return CacheFlushResult
-     */
     public function setCount(int $count): CacheFlushResult
     {
         $this->count = $count;
@@ -40,19 +33,11 @@ class CacheFlushResult
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getResult(): string
     {
         return $this->result;
     }
 
-    /**
-     * @param string $result
-     *
-     * @return CacheFlushResult
-     */
     public function setResult(string $result): CacheFlushResult
     {
         $this->result = $result;

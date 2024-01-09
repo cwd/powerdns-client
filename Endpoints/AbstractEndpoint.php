@@ -3,7 +3,7 @@
 /*
  * This file is part of the CwdPowerDNS Client
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * (c) 2024 cwd.at GmbH <office@cwd.at>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -28,7 +28,7 @@ abstract class AbstractEndpoint
         $this->client = $client;
         $this->defaultServerId = $defaultServerId;
         $this->validator = Validation::createValidatorBuilder()
-                            ->enableAnnotationMapping()
+                            ->enableAttributeMapping()
                             ->getValidator();
     }
 
@@ -36,12 +36,7 @@ abstract class AbstractEndpoint
     {
         $violations = $this->validator->validate($entity, null, $groups);
         if (\count($violations) > 0) {
-            throw new ValidationException(
-                sprintf('Entity %s does not validate to spezification', \get_class($entity)),
-                0,
-                null,
-                $violations
-            );
+            throw new ValidationException(sprintf('Entity %s does not validate to spezification', \get_class($entity)), 0, null, $violations);
         }
 
         return true;

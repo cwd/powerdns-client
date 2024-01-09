@@ -53,28 +53,16 @@ class Metadata
         'TSIG-ALLOW-DNSUPDATE',
     ];
 
-    /**
-     * @var string
-     * @Assert\NotBlank(groups={"CREATE", "UPDATE"})
-     */
-    protected $kind;
+    #[Assert\NotBlank(groups: ['CREATE', 'UPDATE'])]
+    protected ?string $kind = null;
 
-    /** @var string[] */
-    protected $metadata = [];
+    protected array $metadata = [];
 
-    /**
-     * @return string
-     */
     public function getKind(): string
     {
         return $this->kind;
     }
 
-    /**
-     * @param string $kind
-     *
-     * @return Metadata
-     */
     public function setKind(string $kind): Metadata
     {
         $this->kind = $kind;
@@ -82,19 +70,11 @@ class Metadata
         return $this;
     }
 
-    /**
-     * @return string[]
-     */
     public function getMetadata(): array
     {
         return $this->metadata;
     }
 
-    /**
-     * @param string[] $metadata
-     *
-     * @return Metadata
-     */
     public function setMetadata(array $metadata): Metadata
     {
         $this->metadata = $metadata;
@@ -102,11 +82,7 @@ class Metadata
         return $this;
     }
 
-    /**
-     * @param ExecutionContextInterface $context
-     * @param $payload
-     * @Assert\Callback(groups={"CREATE", "UPDATE"})
-     */
+    #[Assert\Callback(groups: ['CREATE', 'UPDATE'])]
     public function validateKinds(ExecutionContextInterface $context, $payload): void
     {
         if (\in_array($this->getKind(), self::VALID_KINDs, false)) {
@@ -122,11 +98,7 @@ class Metadata
             ->addViolation();
     }
 
-    /**
-     * @param ExecutionContextInterface $context
-     * @param $payload
-     * @Assert\Callback(groups={"UPDATE"})
-     */
+    #[Assert\Callback(groups: ['UPDATE'])]
     public function validateForbidden(ExecutionContextInterface $context, $payload): void
     {
         if (\in_array($this->getKind(), self::UPDATE_FORBIDDEN, false)) {

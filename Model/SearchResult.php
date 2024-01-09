@@ -15,36 +15,22 @@ namespace Cwd\PowerDNSClient\Model;
 
 class SearchResult
 {
-    /** @var string */
-    protected $content;
-    /** @var bool */
-    protected $disabled = false;
-    /** @var string */
-    protected $name;
-    /** @var string */
-    protected $objectType;
-    /** @var string */
-    protected $zoneId;
-    /** @var string */
-    protected $zone;
-    /** @var string */
-    protected $type;
-    /** @var int */
-    protected $ttl;
 
-    /**
-     * @return string
-     */
+    protected ?string $content = null;
+    protected bool $disabled = false;
+    protected ?string $name = null;
+    protected ?string $objectType = null;
+    protected ?string $zoneId = null;
+    protected ?string $zone = null;
+    protected ?string $type = null;
+    protected ?int $ttl = null;
+
+
     public function getContent(): ?string
     {
         return $this->content;
     }
 
-    /**
-     * @param string $content
-     *
-     * @return SearchResult
-     */
     public function setContent(string $content): SearchResult
     {
         $this->content = $content;
@@ -52,19 +38,12 @@ class SearchResult
         return $this;
     }
 
-    /**
-     * @return bool
-     */
+
     public function isDisabled(): bool
     {
         return $this->disabled;
     }
 
-    /**
-     * @param bool $disabled
-     *
-     * @return SearchResult
-     */
     public function setDisabled(bool $disabled): SearchResult
     {
         $this->disabled = $disabled;
@@ -72,19 +51,12 @@ class SearchResult
         return $this;
     }
 
-    /**
-     * @return string
-     */
+
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return SearchResult
-     */
     public function setName(string $name): SearchResult
     {
         $this->name = $name;
@@ -92,19 +64,12 @@ class SearchResult
         return $this;
     }
 
-    /**
-     * @return string
-     */
+
     public function getObjectType(): string
     {
         return $this->objectType;
     }
 
-    /**
-     * @param string $objectType
-     *
-     * @return SearchResult
-     */
     public function setObjectType(string $objectType): SearchResult
     {
         $this->objectType = $objectType;
@@ -112,19 +77,11 @@ class SearchResult
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getZoneId(): string
     {
         return $this->zoneId;
     }
 
-    /**
-     * @param string $zoneId
-     *
-     * @return SearchResult
-     */
     public function setZoneId(string $zoneId): SearchResult
     {
         $this->zoneId = $zoneId;
@@ -132,19 +89,11 @@ class SearchResult
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getZone(): ?string
     {
         return $this->zone;
     }
 
-    /**
-     * @param string $zone
-     *
-     * @return SearchResult
-     */
     public function setZone(string $zone): SearchResult
     {
         $this->zone = $zone;
@@ -152,19 +101,11 @@ class SearchResult
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     *
-     * @return SearchResult
-     */
     public function setType(string $type): SearchResult
     {
         $this->type = $type;
@@ -172,19 +113,11 @@ class SearchResult
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getTtl(): ?int
     {
         return $this->ttl;
     }
 
-    /**
-     * @param int $ttl
-     *
-     * @return SearchResult
-     */
     public function setTtl(int $ttl): SearchResult
     {
         $this->ttl = $ttl;

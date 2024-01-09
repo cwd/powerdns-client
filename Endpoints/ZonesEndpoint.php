@@ -3,7 +3,7 @@
 /*
  * This file is part of the CwdPowerDNS Client
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * (c) 2024 cwd.at GmbH <office@cwd.at>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -22,11 +22,7 @@ class ZonesEndpoint extends AbstractEndpoint
     protected const ENDPOINT_ELEMENT = 'servers/%s/zones/%s';
 
     /**
-     * @param Zone   $zone
-     * @param bool   $lazyLoad
-     * @param string $hydrationClass
-     *
-     * @return Zone|null
+     * @param bool $lazyLoad
      *
      * @throws \Http\Client\Exception
      */
@@ -45,12 +41,6 @@ class ZonesEndpoint extends AbstractEndpoint
     }
 
     /**
-     * @param Zone   $zone
-     * @param bool   $lazyLoad
-     * @param string $hydrationClass
-     *
-     * @return Zone|null
-     *
      * @throws \Http\Client\Exception
      */
     public function updateRRSets(Zone $zone, bool $lazyLoad = false, string $hydrationClass = Zone::class): ?Zone
@@ -92,20 +82,14 @@ class ZonesEndpoint extends AbstractEndpoint
     }
 
     /**
-     * @param Zone   $zone
-     * @param bool   $rrsets
-     * @param string $hydrationClass
-     *
-     * @return Zone
+     * @param bool $rrsets
      *
      * @throws \Http\Client\Exception
      */
     public function create(Zone $zone, $rrsets = true, string $hydrationClass = Zone::class): Zone
     {
         $rrsets = $rrsets ? 'true' : 'false';
-
         $this->validateEntity($zone, ['CREATE']);
-
         $payload = $this->getClient()->getSerializer()->serialize($zone, 'json', ['groups' => ['CREATE']]);
 
         return $this->getClient()->call($payload, sprintf(self::ENDPOINT_LIST, $this->defaultServerId), $hydrationClass, false, 'POST');
@@ -114,8 +98,6 @@ class ZonesEndpoint extends AbstractEndpoint
     /**
      * @param string|Zone $zoneId
      * @param string      $hydrationClass
-     *
-     * @return Zone
      *
      * @throws \Http\Client\Exception
      */
@@ -129,14 +111,11 @@ class ZonesEndpoint extends AbstractEndpoint
     }
 
     /**
-     * @param string $zoneName
-     * @param string $hydrationClass
-     *
      * @return Zone[]
      *
      * @throws \Http\Client\Exception
      */
-    public function all(?string $zoneName = null, string $hydrationClass = Zone::class): array
+    public function all(string $zoneName = null, string $hydrationClass = Zone::class): array
     {
         $queryParams = [];
         if (null !== $zoneName) {
@@ -177,8 +156,6 @@ class ZonesEndpoint extends AbstractEndpoint
     /**
      * @param int|Zone $zoneId
      *
-     * @return string
-     *
      * @throws \Http\Client\Exception
      */
     public function export($zoneId): ?string
@@ -193,8 +170,6 @@ class ZonesEndpoint extends AbstractEndpoint
     /**
      * @param int|Zone $zoneId
      *
-     * @return string
-     *
      * @throws \Http\Client\Exception
      */
     public function check($zoneId): string
@@ -208,8 +183,6 @@ class ZonesEndpoint extends AbstractEndpoint
 
     /**
      * @param int|Zone $zoneId
-     *
-     * @return string
      *
      * @throws \Http\Client\Exception
      */

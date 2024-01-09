@@ -3,7 +3,7 @@
 /*
  * This file is part of the CwdPowerDNS Client
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * (c) 2024 cwd.at GmbH <office@cwd.at>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Cwd\PowerDNSClient;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
+use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request;
 use Http\Discovery\HttpClientDiscovery;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
@@ -22,13 +22,15 @@ use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Mapping\ClassDiscriminatorFromClassMetadata;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
-use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
+
+use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
-use GuzzleHttp\Client as GuzzleClient;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class Client
 {
@@ -43,34 +45,30 @@ class Client
     /** @var Serializer */
     private $serializer;
 
-    public function __construct($apiHost, $apiKey, ?GuzzleClient $client = null, Reader $annotationReader)
+    public function __construct($apiHost, $apiKey, GuzzleClient $client = null)
     {
         $this->apiKey = $apiKey;
         $this->apiUri = sprintf('%s/%s', $apiHost, $this->basePath);
         if (null === $client) {
-            //$this->client  = new GuzzleClient(['base_uri' => $this->apiUri]);
+            // $this->client  = new GuzzleClient(['base_uri' => $this->apiUri]);
             $this->client = HttpClientDiscovery::find();
         }
 
-        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader($annotationReader));
+        $classMetadataFactory = new ClassMetadataFactory(new AttributeLoader());
         $discriminator = new ClassDiscriminatorFromClassMetadata($classMetadataFactory);
 
         $normalizer = new ObjectNormalizer($classMetadataFactory, new CamelCaseToSnakeCaseNameConverter(), new PropertyAccessor(), new ReflectionExtractor(), $discriminator);
-        $this->serializer = new Serializer([new DateTimeNormalizer(), new ArrayDenormalizer(), $normalizer], ['json' => new JsonEncoder()]);
+        $this->serializer = new Serializer([new DateTimeNormalizer(), new BackedEnumNormalizer(), new ArrayDenormalizer(), $normalizer], ['json' => new JsonEncoder()]);
     }
 
     /**
-     * @param string|null     $payload
-     * @param int|string|null $id
-     * @param string          $endpoint
-     * @param string|null     $hydrationClass
-     * @param bool            $isList
-     * @param string          $method
+     * @param string|null $payload
+     * @param string|null $hydrationClass
+     * @param bool        $isList
+     * @param string      $method
      *
      * @throws \Http\Client\Exception
      * @throws \LogicException
-     *
-     * @return mixed
      */
     public function call($payload = null, $uri, $hydrationClass = null, $isList = false, $method = 'GET', array $queryParams = [], $isJson = true)
     {
@@ -93,7 +91,6 @@ class Client
         }
 
         $responseData = json_decode($responseBody);
-
 
         if ($response->getStatusCode() >= 300 && isset($responseData->error)) {
             throw new \LogicException(sprintf('Error on %s request %s: %s', $method, $uri, $responseData->error));
@@ -134,9 +131,6 @@ class Client
         return current($result);
     }
 
-    /**
-     * @return Serializer
-     */
     public function getSerializer(): Serializer
     {
         return $this->serializer;

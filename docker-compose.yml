@@ -13,12 +13,13 @@ services:
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
 
     php:
-        build: .docker/php
+        image: dockerhub.cwd.at/docker/php/fpm-xdebug:8.3
         working_dir: /var/www/app
         user: "$USERID"
         volumes:
             - .:/var/www/app
         environment:
+            SYMFONY_DEPRECATIONS_HELPER: weak
             PHP_XDEBUG_ENABLED: 1
             PHP_IDE_CONFIG: serverName=docker.local
             XDEBUG_CONFIG: remote_host=172.17.0.1 remote_port=9000 remote_connect_back=0

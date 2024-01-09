@@ -18,36 +18,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Comment
 {
-    /**
-     * @var string
-     * @Assert\NotBlank(groups={"CREATE", "UPDATE"})
-     * @Groups({"REPLACE", "CREATE"})
-     */
-    protected $content;
+    #[Groups(['REPLACE', 'CREATE'])]
+    #[Assert\NotBlank(groups: ["CREATE", "UPDATE"])]
+    protected ?string $content = null;
 
-    /**
-     * @var string
-     * @Groups({"REPLACE", "CREATE"})
-     * @Assert\NotBlank(groups={"CREATE", "UPDATE"})
-     */
-    protected $account;
+    #[Groups(['REPLACE', 'CREATE'])]
+    #[Assert\NotBlank(groups: ["CREATE", "UPDATE"])]
+    protected ?string $account = null;
 
-    /** @var int */
-    protected $modifiedAt;
+    protected ?int $modifiedAt = null;
 
-    /**
-     * @return string
-     */
     public function getContent(): string
     {
         return $this->content;
     }
 
-    /**
-     * @param string $content
-     *
-     * @return Comment
-     */
     public function setContent(string $content): Comment
     {
         $this->content = $content;
@@ -55,19 +40,11 @@ class Comment
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getAccount(): ?string
     {
         return $this->account;
     }
 
-    /**
-     * @param string $account
-     *
-     * @return Comment
-     */
     public function setAccount(?string $account): Comment
     {
         $this->account = $account;
@@ -75,19 +52,11 @@ class Comment
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getModifiedAt(): ?int
     {
         return $this->modifiedAt;
     }
 
-    /**
-     * @param int $modifiedAt
-     *
-     * @return Comment
-     */
     public function setModifiedAt(int $modifiedAt): Comment
     {
         $this->modifiedAt = $modifiedAt;

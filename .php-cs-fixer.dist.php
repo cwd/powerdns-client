@@ -11,14 +11,14 @@
 
 declare(strict_types=1);
 
-$finder = PhpCsFixer\Finder::create()
+$finder = (new PhpCsFixer\Finder())
     ->notName('*.twig')
     ->in([__DIR__])
 ;
 
 $year = date('Y');
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setUsingCache(true)
     ->setRiskyAllowed(true)
     ->setRules([

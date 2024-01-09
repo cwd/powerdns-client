@@ -3,7 +3,7 @@
 /*
  * This file is part of the CwdPowerDNS Client
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * (c) 2024 cwd.at GmbH <office@cwd.at>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -36,7 +36,7 @@ class ZonesPerformanceTest extends AbstractTest
 
     private $domains = [];
 
-    public function setUp()
+    public function setUp(): void
     {
         $domains = [];
 
@@ -55,7 +55,7 @@ class ZonesPerformanceTest extends AbstractTest
         $this->domains = $domains;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         foreach ($this->domains as $domain) {
             $this->getClient()->zones()->delete($domain);
@@ -74,14 +74,14 @@ class ZonesPerformanceTest extends AbstractTest
         $domain = current($this->domains);
         $zone = $this->getClient()->zones()->get($domain);
         $this->assertInstanceOf(Zone::class, $zone);
-        $this->assertCount(3, $zone->getRrsets());
+        $this->assertCount(2, $zone->getRrsets());
     }
 
     private function createZone($domain): Zone
     {
         $zone = (new Zone())
             ->setName($domain)
-            ->setKind(Zone::KIND_MASTER)
+            ->setKind(Zone\ZoneKind::MASTER)
             ->addRrset(
                 (new Zone\RRSet())->setName('www.'.$domain)
                     ->setType('A')

@@ -3,7 +3,7 @@
 /*
  * This file is part of the CwdPowerDNS Client
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * (c) 2024 cwd.at GmbH <office@cwd.at>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -81,25 +81,16 @@ class PowerDNSClient
         return new CryptokeysEndpoint($this->getClient(), $this->getDefaultServerId(), $zoneId);
     }
 
-    /**
-     * @return Client
-     */
     public function getClient(): Client
     {
         return $this->client;
     }
 
-    /**
-     * @return string
-     */
     public function getDefaultServerId(): string
     {
         return $this->defaultServerId;
     }
 
-    /**
-     * @param string $defaultServerId
-     */
     public function setDefaultServerId(string $defaultServerId): void
     {
         $this->defaultServerId = $defaultServerId;

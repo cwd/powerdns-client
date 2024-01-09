@@ -30,9 +30,9 @@ variables:
     - .composer-cache
     policy: pull-push
 
-test:php7.3:
+test:php8.3:
   <<: *php_definition
-  image: dockerhub.cwd.at/docker/php/cli-xdebug:7.3
+  image: dockerhub.cwd.at/docker/php/cli-xdebug:8.3
   artifacts:
     name: coverage
     paths:
@@ -41,13 +41,5 @@ test:php7.3:
     expire_in: 2 days
     reports:
       junit: build/logs/phpunit.xml
-  tags:
-    - autoscale
-
-test:php7.4:
-  <<: *php_definition
-  image: dockerhub.cwd.at/docker/php/cli-xdebug:7.4
-  cache:
-    policy: pull
   tags:
     - autoscale
